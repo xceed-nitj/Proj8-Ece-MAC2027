@@ -1,0 +1,139 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100..900;1,100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: "Plus Jakarta Sans", system-ui, Avenir, Helvetica, Arial,
+    sans-serif;
+  background-color: #ffffff;
+  color: #1f2937;
+}
+
+/* ::selection {
+  color: white;
+  background: #196a84;
+} */
+
+
+#news::-webkit-scrollbar {
+  display: none;
+}
+
+#news {
+  scrollbar-width: none;
+}
+
+.hero-sec {
+  /* background-image: url(/public/yellowbgonly.png); */
+  position: relative;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center top;
+  /* Set the section height to 100% of its container's height */
+
+  /* Ensure the section covers the entire viewport height */
+  min-height: 100vh;
+}
+
+.upper-cut-img {
+  position: absolute;
+  height: 60%;
+  top: 0;
+  right: 0;
+}
+
+.lower-cut-img {
+  position: absolute;
+  height: 60%;
+  bottom: 0;
+  right: 0;
+}
+
+.industry-img {
+  position: absolute;
+  /* Position the image absolutely within the parent container */
+  top: 50%;
+  /* Align the top edge of the image at the vertical center */
+  left: 80%;
+  /* Align the left edge of the image at the horizontal center */
+  transform: translate(-50%, -50%);
+  /* Center the image precisely */
+}
+
+.fade-in{
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out ;
+}
+
+
+.fade-out{
+  opacity: 1;
+  transition: opacity 0.8s ease-in-out ;
+}
+
+@layer base {
+  table {
+    width: 100%;
+    border: 2px solid #2563eb;
+    border-collapse: collapse;
+    color: #0c0c0c;
+  }
+  th,
+  td {
+    border: 1px solid #2563eb;
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* bottom of index.css */
+
+@keyframes wave-move {
+  0%   { transform: translateX(50%); }
+  100% { transform: translateX(-350%); }
+}
+
+.wave-wrapper {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200%;      /* twice the viewport so we can scroll half */
+  height: 150px;    /* adjust to taste */
+  overflow: hidden;
+}
+
+.wave-strip {
+  display: flex;
+  width: 200%;
+  animation: wave-move 60s linear infinite;
+}
+
+@layer base {
+
+  a:hover {
+    color: #2563eb;
+  }
+
+a, a:visited {
+  color: rgb(0, 0, 0) !important;
+  text-decoration: none !important;
+}
+  a:active {
+    color: #2563eb;
+  }
+}
+
+.navbar a{
+  color: rgb(255, 255, 255) !important;
+  text-decoration: none !important;
+}
+
+/* .about-content * {
+  color: #056960 !important;
+  padding-left: 15px;
+  padding-right: 15px;
+  line-height: 1.5 !important;
+  background-color: #854D0E !important;
+} */
