@@ -117,7 +117,7 @@
   }
 
 a, a:visited {
-  color: rgb(0, 0, 0) !important;
+  color: inherit !important;
   text-decoration: none !important;
 }
   a:active {
@@ -125,10 +125,7 @@ a, a:visited {
   }
 }
 
-.navbar a{
-  color: rgb(255, 255, 255) !important;
-  text-decoration: none !important;
-}
+/* navbar link colors are handled by Tailwind utility classes */
 
 /* .about-content * {
   color: #056960 !important;

@@ -37,8 +37,8 @@ const CountdownDigit = ({ value, label, color, animate }) => {
         style={{ transformStyle: 'preserve-3d' }}
       >
         <motion.div
-          className="absolute inset-0 bg-gradient-to-br from-white to-teal-50
-                     rounded-lg sm:rounded-xl border border-teal-100
+          className="absolute inset-0 bg-gradient-to-br from-white to-blue-50
+                     rounded-lg sm:rounded-xl border border-blue-100
                      flex items-center justify-center"
           animate={controls}
           style={{ backfaceVisibility: 'hidden' }}
@@ -53,7 +53,7 @@ const CountdownDigit = ({ value, label, color, animate }) => {
       </motion.div>
 
       <span className="text-[8px] xs:text-[10px] sm:text-xs lg:text-sm
-                       uppercase mt-1 sm:mt-2 font-medium tracking-wider text-teal-800">
+                       uppercase mt-1 sm:mt-2 font-medium tracking-wider text-blue-800">
         {label}
       </span>
     </div>
@@ -118,7 +118,7 @@ const CountdownCard = ({ title, time, mainColor, delay, description }) => {
         </div>
 
         {/* Body */}
-        <div className="bg-white/80 backdrop-blur-md border border-teal-100 p-2 xs:p-3 sm:p-4 md:p-6">
+        <div className="bg-white/80 backdrop-blur-md border border-blue-100 p-2 xs:p-3 sm:p-4 md:p-6">
           <p className="text-[8px] xs:text-[10px] sm:text-xs md:text-sm text-gray-600
                         mb-2 sm:mb-3 md:mb-4 min-h-[24px] xs:min-h-[28px]
                         sm:min-h-[32px] md:min-h-[40px]">
@@ -143,10 +143,10 @@ const CountdownCard = ({ title, time, mainColor, delay, description }) => {
               animate={{ scale: [1, 1.05, 1] }}
               transition={{ duration: 1, repeat: Infinity }}
             >
-              <span className="text-teal-700 font-mono">
+              <span className="text-blue-700 font-mono">
                 {String(time.seconds || 0).padStart(2, '0')}
               </span>
-              <span className="text-teal-600 ml-1">seconds</span>
+              <span className="text-blue-600 ml-1">seconds</span>
             </motion.div>
           </div>
         </div>
@@ -215,28 +215,28 @@ const CountdownTimer = ({ confid }) => {
   const cardData = [
     {
       title: "Paper Submission",
-      color: "#0d9488",
+      color: "#2563eb",
       description: "Deadline for submitting your research paper for review",
       time: times.submission,
       index: 0,
     },
     {
       title: "Acceptance Notification",
-      color: "#0f766e",
+      color: "#1d4ed8",
       description: "When authors will be notified of acceptance decisions",
       time: times.acceptance,
       index: 1,
     },
     {
       title: "Registration Deadline",
-      color: "#115e59",
+      color: "#1e40af",
       description: "Final date to register for the conference",
       time: times.registration,
       index: 2,
     },
     {
       title: "Conference Start",
-      color: "#134e4a",
+      color: "#1e3a8a",
       description: "Official opening of the conference",
       time: times.conference,
       index: 3,
@@ -247,7 +247,7 @@ const CountdownTimer = ({ confid }) => {
     <section
       ref={sectionRef}
       className="relative py-8 sm:py-12 md:py-16 px-4 sm:px-6 md:px-8
-                 overflow-hidden bg-gradient-to-b from-teal-50/50 to-white"
+                 overflow-hidden bg-gradient-to-b from-blue-50/40 to-white"
     >
       {/* Background */}
       <div className="absolute inset-0 overflow-hidden">
@@ -256,11 +256,11 @@ const CountdownTimer = ({ confid }) => {
 
       {/* Title */}
       <div className="relative mb-8 sm:mb-12 text-center">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-medium text-teal-900">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-medium text-blue-900">
           Important Dates
         </h2>
         <div className="mt-2 sm:mt-3">
-          <p className="text-xs sm:text-sm md:text-base text-teal-600 max-w-2xl mx-auto">
+          <p className="text-xs sm:text-sm md:text-base text-blue-600 max-w-2xl mx-auto">
             Mark your calendar for these key deadlines and events
           </p>
         </div>

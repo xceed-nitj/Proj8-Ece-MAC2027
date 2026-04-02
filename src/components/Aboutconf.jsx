@@ -125,7 +125,7 @@ const AboutConf = (props) => {
     let highlightedText = text;
     keywords.forEach(keyword => {
       const regex = new RegExp(keyword, 'gi');
-      highlightedText = highlightedText.replace(regex, `<span class="font-semibold text-teal-800">${keyword}</span>`);
+      highlightedText = highlightedText.replace(regex, `<span class="font-semibold text-blue-800">${keyword}</span>`);
     });
     return highlightedText;
   };
@@ -166,24 +166,24 @@ const AboutConf = (props) => {
               <motion.div className="space-y-4 sm:space-y-6">
                 {/* Title */}
                 <div>
-                  <h2 className="text-2xl font-poppins sm:text-3xl md:text-4xl  text-teal-900 font-medium mb-3 sm:mb-6 text-left w-full block">
+                  <h2 className="text-2xl font-poppins sm:text-3xl md:text-4xl  text-blue-900 font-medium mb-3 sm:mb-6 text-left w-full block">
                     About the Conference
                   </h2>
-                  <div className="h-0.5 sm:h-1 w-16 sm:w-24 bg-gradient-to-r from-teal-600 to-teal-400 rounded-full"></div>
+                  <div className="h-0.5 sm:h-1 w-16 sm:w-24 bg-gradient-to-r from-blue-600 to-blue-400 rounded-full"></div>
                 </div>
 
                 {/* Subtitle */}
-                {/* <p className="text-teal-700 text-xs sm:text-sm font-medium tracking-wider uppercase">
+                {/* <p className="text-blue-700 text-xs sm:text-sm font-medium tracking-wider uppercase">
                   International Conference on Innovative Practices in High-End Research
                 </p> */}
 
                 {/* Content */}
                 {isLoading ? (
                   <div className="space-y-3 sm:space-y-4 animate-pulse">
-                    <div className="h-3 sm:h-4 bg-teal-100/50 rounded w-3/4"></div>
-                    <div className="h-3 sm:h-4 bg-teal-100/50 rounded"></div>
-                    <div className="h-3 sm:h-4 bg-teal-100/50 rounded w-5/6"></div>
-                    <div className="h-3 sm:h-4 bg-teal-100/50 rounded w-2/3"></div>
+                    <div className="h-3 sm:h-4 bg-blue-100/50 rounded w-3/4"></div>
+                    <div className="h-3 sm:h-4 bg-blue-100/50 rounded"></div>
+                    <div className="h-3 sm:h-4 bg-blue-100/50 rounded w-5/6"></div>
+                    <div className="h-3 sm:h-4 bg-blue-100/50 rounded w-2/3"></div>
                   </div>
                 ) : (
                   <motion.div 
@@ -214,17 +214,17 @@ const AboutConf = (props) => {
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: 0.3 }}
                 >
-                  <div className="flex-grow h-px bg-gradient-to-r from-transparent via-teal-200 to-transparent"></div>
+                  <div className="flex-grow h-px bg-gradient-to-r from-transparent via-blue-200 to-transparent"></div>
                   <motion.div 
                     className="px-3 sm:px-4" 
                     whileHover={{ rotate: 180, scale: 1.1 }}
                     transition={{ duration: 0.6 }}
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                     </svg>
                   </motion.div>
-                  <div className="flex-grow h-px bg-gradient-to-r from-transparent via-teal-200 to-transparent"></div>
+                  <div className="flex-grow h-px bg-gradient-to-r from-transparent via-blue-200 to-transparent"></div>
                 </motion.div> */}
               </motion.div>
             </motion.div>

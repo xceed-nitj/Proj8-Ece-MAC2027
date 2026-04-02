@@ -1,27 +1,141 @@
 // src/components/Timeline.jsx
-
 import axios from "axios";
 import getEnvironment from "../getenvironment";
 import { useState, useEffect, forwardRef } from "react";
 import formatDate from "../utility/formatDate";
 import { motion } from "framer-motion";
 
-// Use getTittleDescription as the description for timeline
-const getTittleDescription = (title) => {
-  const descMap = {
-    'Paper submission deadline': "This is the last date to submit your papers for review. Ensure your work is submitted before the deadline.",
-    'Starting of Registration ': "Registration for the conference opens on this date. Secure your spot by registering early.",
-    'Early Bird Registration ': "Take advantage of discounted rates by registering during the early bird period.",
-    "Conference Starting Date": "The conference officially begins on this date. Join us for insightful sessions and networking.",
-  };
-  return descMap[title] || "An important milestone for the conference - mark your calendar.";
+const descriptionMap = {
+  "Paper submission deadline":
+    "Submit your research papers before this date for peer review consideration.",
+  "Starting of Registration ":
+    "Registration opens — secure your spot early for the best rates.",
+  "Early Bird Registration ":
+    "Take advantage of discounted early-bird registration rates.",
+  "Conference Starting Date":
+    "The conference officially begins. Join sessions, keynotes, and networking.",
+};
+
+const getDesc = (title) =>
+  descriptionMap[title] ||
+  "An important milestone for the conference — mark your calendar.";
+
+const icons = [
+  // Document / paper
+  <svg key="0" xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+  </svg>,
+  // Bell / notification
+  <svg key="1" xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+  </svg>,
+  // ID card / registration
+  <svg key="2" xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2" />
+  </svg>,
+  // Calendar / conference
+  <svg key="3" xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+  </svg>,
+];
+
+// Accent colours per card index
+const accents = [
+  { from: "#2563eb", to: "#60a5fa", light: "#eff6ff", text: "#1d4ed8" },
+  { from: "#1d4ed8", to: "#93c5fd", light: "#dbeafe", text: "#1e40af" },
+  { from: "#1e40af", to: "#3b82f6", light: "#bfdbfe", text: "#1e3a8a" },
+  { from: "#1e3a8a", to: "#1d4ed8", light: "#dbeafe", text: "#172554" },
+];
+
+const TimelineCard = ({ item, idx }) => {
+  const acc = accents[idx % accents.length];
+  const date = item.extended ? item.newDate : item.date;
+  const isExtended = !!item.extended;
+
+  return (
+    <motion.div
+      className="relative flex flex-col h-full"
+      initial={{ opacity: 0, y: 36 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.55, delay: idx * 0.1, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {/* Step number */}
+      <div
+        className="absolute -top-4 left-5 w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md z-10"
+        style={{ background: `linear-gradient(135deg, ${acc.from}, ${acc.to})` }}
+      >
+        {idx + 1}
+      </div>
+
+      <motion.div
+        className="bg-white rounded-2xl overflow-hidden shadow-md border border-blue-50 flex flex-col h-full"
+        whileHover={{ y: -4, boxShadow: "0 16px 40px -8px rgba(30,58,138,0.14)" }}
+        transition={{ duration: 0.22 }}
+      >
+        {/* Coloured top stripe */}
+        <div
+          className="h-1.5 w-full"
+          style={{ background: `linear-gradient(90deg, ${acc.from}, ${acc.to})` }}
+        />
+
+        {/* Card body */}
+        <div className="p-5 sm:p-6 flex flex-col gap-3 flex-1">
+          {/* Icon + title */}
+          <div className="flex items-start gap-3">
+            <div
+              className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center"
+              style={{ background: acc.light, color: acc.text }}
+            >
+              {icons[idx % icons.length]}
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3
+                className="text-sm sm:text-base font-semibold leading-snug"
+                style={{ color: acc.text }}
+              >
+                {item.title}
+              </h3>
+            </div>
+          </div>
+
+          {/* Date */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <span
+              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold px-3 py-1 rounded-lg"
+              style={{ background: acc.light, color: acc.text }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              {formatDate(date)}
+            </span>
+            {isExtended && (
+              <>
+                <span className="text-xs text-gray-400 line-through">
+                  {formatDate(item.date)}
+                </span>
+                <span className="text-[10px] bg-orange-50 text-orange-600 border border-orange-200 px-2 py-0.5 rounded-full font-medium">
+                  Extended
+                </span>
+              </>
+            )}
+          </div>
+
+          {/* Description */}
+          <p className="text-xs sm:text-sm text-slate-500 leading-relaxed flex-1">
+            {getDesc(item.title)}
+          </p>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
 };
 
 const Timeline = forwardRef((props, ref) => {
   const { confid } = props;
   const [datesData, setDatesData] = useState([]);
   const [apiUrl, setApiUrl] = useState(null);
-  const [hoveredIndex, setHoveredIndex] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -30,7 +144,6 @@ const Timeline = forwardRef((props, ref) => {
 
   useEffect(() => {
     if (!apiUrl) return;
-
     setIsLoading(true);
     axios
       .get(`${apiUrl}/conferencemodule/eventDates/conference/${confid}`, {
@@ -40,197 +153,105 @@ const Timeline = forwardRef((props, ref) => {
         setDatesData(res.data);
         setIsLoading(false);
       })
-      .catch((err) => {
-        console.error(err);
-        setIsLoading(false);
-      });
+      .catch(() => setIsLoading(false));
   }, [apiUrl, confid]);
 
   return (
-    <motion.div
-      ref={ref}
-      className="relative py-8 sm:py-12 w-full bg-gradient-to-b from-white via-blue-50/30 to-white overflow-hidden"
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.7 }}
-    >
-      {/* Subtle background elements */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-48 sm:w-64 h-48 sm:h-64 bg-blue-100/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-40 sm:w-60 h-40 sm:h-60 bg-blue-200/30 rounded-full blur-3xl animate-pulse delay-1000"></div>
-      </div>
+    <section ref={ref} className="relative w-full py-14 sm:py-20 overflow-hidden">
+      {/* Subtle blue gradient bg */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(180deg, #f8faff 0%, #eff6ff 50%, #f8faff 100%)",
+        }}
+      />
+      {/* Decorative dot grid */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.04]"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle, #2563eb 1px, transparent 1px)",
+          backgroundSize: "28px 28px",
+        }}
+      />
 
-      <div className="container mx-auto px-4 sm:px-6 relative z-10">
-        {/* Title Section - Simplified */}
-        <motion.div 
-          className="text-center mb-8 sm:mb-10"
-          initial={{ y: -20, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* ── Section header ── */}
+        <motion.div
+          className="text-center mb-12 sm:mb-16"
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.55 }}
         >
-          <h2 className="text-3xl font-poppins font-medium sm:text-4xl text-blue-900 mb-3 relative inline-block ">
-            Timeline
-            <motion.div 
-              className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-blue-500 to-blue-300 rounded-full"
-              initial={{ width: 0 }}
-              whileInView={{ width: "100%" }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-            ></motion.div>
+          <span className="inline-block text-xs font-bold tracking-[0.2em] uppercase text-blue-500 mb-3">
+            Schedule
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-poppins font-bold text-slate-900 mb-4">
+            Important Dates
           </h2>
-          <p className="text-sm sm:text-base text-blue-700 mt-2 max-w-2xl mx-auto">
-            {getTittleDescription("Paper Submission Deadline")}
+          {/* Animated underline */}
+          <motion.div
+            className="mx-auto h-1 rounded-full"
+            style={{
+              background: "linear-gradient(90deg, #2563eb, #60a5fa)",
+              width: 0,
+            }}
+            whileInView={{ width: "64px" }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+          />
+          <p className="mt-4 text-sm sm:text-base text-slate-500 max-w-xl mx-auto">
+            Mark your calendar — these key deadlines keep you on track for EAIC 2026.
           </p>
         </motion.div>
 
-        {/* Loading State - Simplified */}
+        {/* ── Loading skeleton ── */}
         {isLoading && (
-          <div className="flex flex-col items-center justify-center py-10">
-            <div className="w-12 h-12 border-4 border-blue-200 border-t-teal-600 rounded-full animate-spin"></div>
-            <p className="mt-3 text-blue-600 text-sm">Loading...</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="bg-white rounded-2xl p-6 shadow-md animate-pulse">
+                <div className="h-1.5 w-full bg-blue-100 rounded mb-5" />
+                <div className="flex gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-blue-50" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-3 bg-blue-50 rounded w-3/4" />
+                    <div className="h-3 bg-blue-50 rounded w-1/2" />
+                  </div>
+                </div>
+                <div className="h-7 bg-blue-50 rounded-lg w-1/2 mb-4" />
+                <div className="space-y-2">
+                  <div className="h-3 bg-blue-50 rounded" />
+                  <div className="h-3 bg-blue-50 rounded w-4/5" />
+                </div>
+              </div>
+            ))}
           </div>
         )}
 
-        {/* No Data State - Simplified */}
+        {/* ── No data state ── */}
         {!isLoading && datesData.length === 0 && (
-          <div className="text-center py-10">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto text-blue-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            <h3 className="text-lg font-medium text-blue-700 mb-1">No dates available yet</h3>
-            <p className="text-blue-600 text-sm">Conference dates will be announced soon</p>
+          <div className="text-center py-16">
+            <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <p className="text-slate-500 text-sm">Conference dates will be announced soon.</p>
           </div>
         )}
 
-        {/* Timeline Container - Simplified */}
+        {/* ── Cards grid ── */}
         {!isLoading && datesData.length > 0 && (
-          <div className="relative max-w-5xl mx-auto">
-            {/* Central Line */}
-            <motion.div 
-              className="absolute left-4 sm:left-1/2 top-0 bottom-0 w-0.5 sm:w-1 bg-gradient-to-b from-blue-400 via-blue-600 to-blue-400 transform sm:-translate-x-1/2 z-0 rounded-full"
-              initial={{ height: 0 }}
-              whileInView={{ height: "100%" }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.2 }}
-            ></motion.div>
-
-            {/* Timeline Items - Simplified */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pt-5">
             {datesData.map((item, idx) => (
-              <motion.div
-                key={idx}
-                className={`relative flex items-start sm:items-center mb-8 sm:mb-12 group ${
-                  idx % 2 === 0 ? "justify-start" : "sm:justify-end justify-start"
-                }`}
-                initial={{ opacity: 0, x: idx % 2 === 0 ? -30 : 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
-                onMouseEnter={() => setHoveredIndex(idx)}
-                onMouseLeave={() => setHoveredIndex(null)}
-              >
-
-                {/* Timeline Node */}
-                <motion.div
-                  className="absolute left-4 sm:left-1/2 top-6 sm:top-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 z-20"
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ 
-                    type: "spring", 
-                    stiffness: 300, 
-                    damping: 15,
-                    delay: 0.3 + idx * 0.1 
-                  }}
-                >
-                  <div 
-                    className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 border-white bg-blue-500 shadow-md flex items-center justify-center transition-all duration-300 ${
-                      hoveredIndex === idx ? "scale-125" : "scale-100"
-                    }`}
-                  >
-                    <div className={`w-2 h-2 rounded-full bg-white transition-all duration-300`}></div>
-                  </div>
-                </motion.div>
-
-                {/* Content Card - Simplified */}
-                <motion.div
-                  className={`ml-12 sm:ml-0 w-[calc(100%-48px)] sm:w-[calc(50%-40px)] ${
-                    idx % 2 === 0 ? "sm:pr-6" : "sm:pl-6"
-                  }`}
-                  whileHover={{ y: -5 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <div className="bg-white rounded-lg overflow-hidden shadow-md border border-blue-100 hover:shadow-lg transition-all duration-300">
-                    {/* Card Header */}
-                    <div className="bg-gradient-to-r from-blue-600 to-blue-500 py-2 px-3 sm:px-4">
-                      <h3 className="text-white font-medium text-sm sm:text-base">
-                        {item.title}
-                      </h3>
-                    </div>
-                    
-                    {/* Card Body - Simplified */}
-                    <div className="p-3 sm:p-4 bg-gradient-to-b from-blue-50 to-white">
-                      {!item.extended ? (
-                        <div className="space-y-2">
-                          <div className="flex items-center">
-                            <div className="mr-2 text-blue-500">
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                              </svg>
-                            </div>
-                            <p className="text-blue-800 font-medium text-xs sm:text-sm">
-                              {formatDate(item.date)}
-                            </p>
-                          </div>
-                          {/* Use getTittleDescription for description */}
-                          <p className="text-blue-700 text-xs pl-6 border-l border-blue-200">
-                            {getTittleDescription(item.title)}
-                          </p>
-                        </div>
-                      ) : (
-                        <div className="space-y-2">
-                          <div className="flex items-center">
-                            <div className="mr-2 text-blue-500">
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                              </svg>
-                            </div>
-                            <p className="text-blue-800 font-medium text-xs sm:text-sm">
-                              {formatDate(item.newDate)}
-                            </p>
-                          </div>
-                          <div className="flex items-center pl-6">
-                            <p className="text-blue-400 text-xs line-through mr-2">
-                              {formatDate(item.date)}
-                            </p>
-                            <span className="bg-blue-100 text-blue-800 text-[10px] px-1 py-0.5 rounded">
-                              Extended
-                            </span>
-                          </div>
-                          {/* Use getTittleDescription for description */}
-                          {/* <p className="text-blue-700 text-xs pl-6 border-l border-blue-200">
-                            {getTittleDescription(item.title)}
-                          </p> */}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </motion.div>
-              </motion.div>
+              <TimelineCard key={idx} item={item} idx={idx} />
             ))}
           </div>
         )}
       </div>
-
-      {/* Animation keyframes */}
-      <style>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-10px); }
-        }
-      `}</style>
-    </motion.div>
+    </section>
   );
 });
 

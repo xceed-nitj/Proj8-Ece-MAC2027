@@ -3,7 +3,7 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-// ─── Navigation Data ──────────────────────────────────────────────────────────
+// ─── Nav data ─────────────────────────────────────────────────────────────────
 
 const navigationLeft = [
   { name: "Home", href: "/" },
@@ -42,7 +42,7 @@ const navigationRight = [
   },
 ];
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function cx(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -53,6 +53,12 @@ function isActive(href, pathname) {
   return pathname === href || pathname === href.trim();
 }
 
+// ─── Shared nav background ────────────────────────────────────────────────────
+// Matches the hero left-side gradient exactly
+const NAV_BG = "linear-gradient(90deg, #0a0f1e 0%, #0f172a 30%, #1e3a8a 70%, #1d4ed8 100%)";
+const NAV_BG_SCROLLED =
+  "linear-gradient(90deg, rgba(10,15,30,0.97) 0%, rgba(15,23,42,0.97) 30%, rgba(30,58,138,0.97) 70%, rgba(29,78,216,0.97) 100%)";
+
 // ─── Desktop NavItem ──────────────────────────────────────────────────────────
 
 function DesktopNavItem({ item, currentPath }) {
@@ -61,13 +67,22 @@ function DesktopNavItem({ item, currentPath }) {
     ? item.subItems.some((s) => isActive(s.href, currentPath))
     : isActive(item.href, currentPath);
 
+  // Base class — white text, subtle hover state
   const linkBase = cx(
-    "relative inline-flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] rounded-md transition-colors duration-200 group whitespace-nowrap select-none",
-    active ? "text-blue-700" : "text-slate-600 hover:text-blue-700"
+    "relative inline-flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] rounded-md transition-all duration-200 group whitespace-nowrap select-none",
+    active
+      ? "text-white"
+      : "text-white/75 hover:text-white"
   );
 
+  // White sliding underline
   const underline = (
-    <span className="absolute bottom-0 left-2.5 right-2.5 h-[2px] bg-blue-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left rounded-full" />
+    <span
+      className={cx(
+        "absolute bottom-0 left-2.5 right-2.5 h-[2px] rounded-full transition-transform duration-300 origin-left",
+        active ? "scale-x-100 bg-white" : "scale-x-0 group-hover:scale-x-100 bg-white/80"
+      )}
+    />
   );
 
   if (item.isExternal) {
@@ -76,23 +91,13 @@ function DesktopNavItem({ item, currentPath }) {
         href={item.href}
         target="_blank"
         rel="noopener noreferrer"
-        className={cx(linkBase, "text-blue-600 hover:text-blue-700")}
+        className={cx(linkBase, "text-sky-300 hover:text-sky-200")}
         style={{ fontFamily: "'Montserrat', sans-serif" }}
       >
         {name}
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-3 w-3"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-          />
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
         </svg>
         {underline}
       </a>
@@ -109,19 +114,18 @@ function DesktopNavItem({ item, currentPath }) {
             viewBox="0 0 20 20"
             fill="currentColor"
           >
-            <path
-              fillRule="evenodd"
+            <path fillRule="evenodd"
               d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-              clipRule="evenodd"
-            />
+              clipRule="evenodd" />
           </svg>
           {underline}
         </button>
 
-        {/* Dropdown */}
-        <div className="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 translate-y-2 group-hover:translate-y-0 z-50 min-w-[220px]">
-          <div className="bg-white rounded-xl overflow-hidden shadow-xl border border-blue-50"
-            style={{ boxShadow: "0 8px 32px rgba(30,58,138,0.10)" }}
+        {/* Dropdown — white card for contrast against dark nav */}
+        <div className="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 translate-y-2 group-hover:translate-y-0 z-50 min-w-[230px]">
+          <div
+            className="bg-white rounded-xl overflow-hidden border border-blue-100"
+            style={{ boxShadow: "0 12px 40px rgba(10,15,30,0.25)" }}
           >
             <div className="py-1.5">
               {item.subItems.map((sub) => (
@@ -129,13 +133,13 @@ function DesktopNavItem({ item, currentPath }) {
                   key={sub.name}
                   to={sub.href}
                   className={cx(
-                    "flex items-center gap-2 px-4 py-2.5 text-[11px] font-medium transition-colors duration-150 group/sub",
+                    "flex items-center gap-2.5 px-4 py-2.5 text-[11px] font-semibold transition-colors duration-150 group/sub",
                     isActive(sub.href, currentPath)
                       ? "text-blue-700 bg-blue-50"
-                      : "text-slate-700 hover:text-blue-700 hover:bg-blue-50/60"
+                      : "text-slate-700 hover:text-blue-700 hover:bg-blue-50/70"
                   )}
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 opacity-0 group-hover/sub:opacity-100 transition-opacity duration-150 flex-shrink-0" />
+                  <span className="w-1 h-1 rounded-full bg-blue-500 opacity-0 group-hover/sub:opacity-100 transition-opacity flex-shrink-0" />
                   {sub.name}
                 </Link>
               ))}
@@ -160,7 +164,7 @@ function DesktopNavItem({ item, currentPath }) {
   );
 }
 
-// ─── Main Component ───────────────────────────────────────────────────────────
+// ─── Main Navbar ──────────────────────────────────────────────────────────────
 
 export default function Navbar() {
   const location = useLocation();
@@ -169,7 +173,6 @@ export default function Navbar() {
 
   const currentPath = location.pathname;
 
-  // Add shadow when scrolled
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -183,165 +186,75 @@ export default function Navbar() {
 
   return (
     <div className="sticky top-0 z-50 font-sans">
-      {/* ══════════════════════════════
-          TOP INFO BAR
-      ══════════════════════════════ */}
-      <div
-        className="w-full"
-        style={{
-          height: "34px",
-          background:
-            "linear-gradient(90deg, #0f172a 0%, #1e3a8a 55%, #1d4ed8 100%)",
-        }}
-      >
-        <div className="h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          {/* Email */}
-          <a
-            href="mailto:eaic@nitj.ac.in"
-            className="flex items-center gap-1.5 text-[11px] font-medium tracking-wide transition-colors duration-200 hover:text-white"
-            style={{ color: "#93c5fd" }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-3.5 w-3.5 flex-shrink-0"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-              />
-            </svg>
-            <span className="hidden xs:inline">eaic@nitj.ac.in</span>
-          </a>
-
-          {/* Phone */}
-          <a
-            href="tel:+916280432258"
-            className="flex items-center gap-1.5 text-[11px] font-medium tracking-wide transition-colors duration-200 hover:text-white"
-            style={{ color: "#93c5fd" }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-3.5 w-3.5 flex-shrink-0"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M2.25 6.75c0-.621.504-1.125 1.125-1.125h3.375c.444 0 .84.255 1.03.654l1.174 2.348a1.125 1.125 0 01-.21 1.248l-1.239 1.238a11.25 11.25 0 005.303 5.303l1.238-1.239a1.125 1.125 0 011.248-.21l2.348 1.174c.399.19.654.586.654 1.03v3.375c0 .621-.504 1.125-1.125 1.125h-.75C10.67 20.25 3.75 13.33 3.75 5.25v-.75z"
-              />
-            </svg>
-            +91-6280432258
-          </a>
-        </div>
-      </div>
-
-      {/* ══════════════════════════════
-          MAIN NAV BAR
-      ══════════════════════════════ */}
       <Disclosure as="header">
         {({ open, close }) => (
           <>
+            {/* ── Main bar ── */}
             <div
-              className={cx(
-                "bg-white transition-all duration-300",
-                scrolled
-                  ? "shadow-lg"
-                  : "shadow-sm border-b border-blue-50"
-              )}
+              className="transition-all duration-300"
+              style={{
+                background: scrolled ? NAV_BG_SCROLLED : NAV_BG,
+                backdropFilter: scrolled ? "blur(12px)" : "none",
+                boxShadow: scrolled
+                  ? "0 4px 24px rgba(10,15,30,0.5)"
+                  : "0 1px 0 rgba(255,255,255,0.06)",
+              }}
             >
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex h-[52px] items-center justify-between">
+                <div className="flex h-[54px] items-center justify-between">
 
-                  {/* ── Mobile: Hamburger + Brand ── */}
+                  {/* Mobile: hamburger + brand */}
                   <div className="flex items-center gap-3 lg:hidden">
                     <Disclosure.Button
-                      className="p-1.5 rounded-lg text-blue-700 hover:bg-blue-50 transition-colors duration-200 focus:outline-none"
+                      className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors duration-200 focus:outline-none"
                       aria-label="Toggle menu"
                     >
-                      {open ? (
-                        <XMarkIcon className="h-5 w-5" />
-                      ) : (
-                        <Bars3Icon className="h-5 w-5" />
-                      )}
+                      {open
+                        ? <XMarkIcon className="h-5 w-5" />
+                        : <Bars3Icon className="h-5 w-5" />}
                     </Disclosure.Button>
 
                     <Link to="/" className="flex items-center gap-2" onClick={close}>
-                      <img
-                        src="/logo.png"
-                        alt="NITJ"
-                        className="h-7 w-auto object-contain"
-                      />
-                      <span
-                        className="text-lg font-bold font-poppins tracking-widest"
-                        style={{
-                          background:
-                            "linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)",
-                          WebkitBackgroundClip: "text",
-                          WebkitTextFillColor: "transparent",
-                          backgroundClip: "text",
-                        }}
-                      >
+                      <img src="/logo.png" alt="NITJ" className="h-7 w-auto object-contain brightness-0 invert" />
+                      <span className="text-lg font-bold font-poppins tracking-widest text-white">
                         EAIC 2026
                       </span>
                     </Link>
                   </div>
 
-                  {/* ── Desktop: Full Nav ── */}
-                  <nav
-                    className="hidden lg:flex items-center justify-between w-full"
-                    aria-label="Main navigation"
-                  >
+                  {/* Desktop: full nav */}
+                  <nav className="hidden lg:flex items-center justify-between w-full" aria-label="Main navigation">
+
                     {/* Brand */}
-                    <Link
-                      to="/"
-                      className="flex items-center gap-2.5 flex-shrink-0 mr-4 group"
-                    >
-                      <div className="relative">
-                        <img
-                          src="/logo.png"
-                          alt="NIT Jalandhar"
-                          className="h-8 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
-                        />
+                    <Link to="/" className="flex items-center gap-2.5 flex-shrink-0 mr-5 group">
+                      <img
+                        src="/logo.png"
+                        alt="NIT Jalandhar"
+                        className="h-8 w-auto object-contain brightness-0 invert transition-transform duration-200 group-hover:scale-105"
+                      />
+                      <div className="flex flex-col leading-none">
+                        <span className="font-poppins text-[15px] font-bold tracking-[0.22em] text-white">
+                          EAIC 2026
+                        </span>
+                        <span className="text-[9px] text-white/45 tracking-[0.15em] uppercase font-medium mt-0.5">
+                          NIT Jalandhar
+                        </span>
                       </div>
-                      <span
-                        className="font-poppins text-xl font-bold tracking-[0.2em]"
-                        style={{
-                          background:
-                            "linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)",
-                          WebkitBackgroundClip: "text",
-                          WebkitTextFillColor: "transparent",
-                          backgroundClip: "text",
-                        }}
-                      >
-                        EAIC 2026
-                      </span>
                     </Link>
 
-                    {/* Nav Items */}
+                    {/* Nav items — centred */}
                     <div className="flex items-center flex-wrap gap-0.5">
                       {allNavItems.map((item) => (
-                        <DesktopNavItem
-                          key={item.name}
-                          item={item}
-                          currentPath={currentPath}
-                        />
+                        <DesktopNavItem key={item.name} item={item} currentPath={currentPath} />
                       ))}
                     </div>
 
-                    {/* Register CTA */}
+                    {/* Register button — white pill */}
                     <a
                       href="/68859b12959ec9c788f10d16"
-                      className="ml-3 flex-shrink-0 inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all duration-200 hover:shadow-md hover:shadow-blue-200 hover:-translate-y-0.5 tracking-wide"
+                      className="ml-3 flex-shrink-0 inline-flex items-center gap-1.5 bg-white hover:bg-blue-50 text-blue-900 text-[11px] font-bold px-4 py-2 rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-black/20 hover:-translate-y-0.5 tracking-wide"
                     >
-                      Register
+                      Register Now
                     </a>
                   </nav>
 
@@ -351,19 +264,32 @@ export default function Navbar() {
               </div>
             </div>
 
-            {/* ══════════════════════════════
-                MOBILE MENU
-            ══════════════════════════════ */}
+            {/* ── Mobile menu ── */}
             <Transition
               enter="transition duration-200 ease-out"
-              enterFrom="opacity-0 -translate-y-3"
+              enterFrom="opacity-0 -translate-y-2"
               enterTo="opacity-100 translate-y-0"
               leave="transition duration-150 ease-in"
               leaveFrom="opacity-100 translate-y-0"
-              leaveTo="opacity-0 -translate-y-3"
+              leaveTo="opacity-0 -translate-y-2"
             >
-              <Disclosure.Panel className="lg:hidden bg-white border-t border-blue-50 absolute top-full left-0 right-0 z-40 max-h-[76vh] overflow-y-auto shadow-2xl shadow-blue-950/10">
-                <div className="px-3 py-3 space-y-0.5">
+              <Disclosure.Panel
+                className="lg:hidden absolute top-full left-0 right-0 z-40 max-h-[76vh] overflow-y-auto"
+                style={{
+                  background: "linear-gradient(180deg, #0f172a 0%, #1e3a8a 100%)",
+                  boxShadow: "0 16px 40px rgba(10,15,30,0.6)",
+                }}
+              >
+                {/* Dot grid */}
+                <div
+                  className="absolute inset-0 pointer-events-none opacity-[0.04]"
+                  style={{
+                    backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)",
+                    backgroundSize: "24px 24px",
+                  }}
+                />
+
+                <div className="relative z-10 px-3 py-3 space-y-0.5">
                   {allNavItems.map((navItem) => {
                     const name = navItem.name;
                     const isExpanded = mobileOpen[name];
@@ -375,22 +301,11 @@ export default function Navbar() {
                           href={navItem.href}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-semibold text-blue-600 hover:bg-blue-50 transition-colors duration-150"
+                          className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-semibold text-sky-300 hover:bg-white/10 transition-colors duration-150"
                         >
                           {name}
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-3.5 w-3.5 opacity-60"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                            />
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                           </svg>
                         </a>
                       );
@@ -403,32 +318,22 @@ export default function Navbar() {
                             onClick={() => toggleSection(name)}
                             className={cx(
                               "flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors duration-150",
-                              navItem.subItems.some((s) =>
-                                isActive(s.href, currentPath)
-                              )
-                                ? "text-blue-700 bg-blue-50"
-                                : "text-slate-700 hover:bg-blue-50 hover:text-blue-700"
+                              navItem.subItems.some((s) => isActive(s.href, currentPath))
+                                ? "text-white bg-white/15"
+                                : "text-white/80 hover:bg-white/10 hover:text-white"
                             )}
                           >
                             {name}
                             <svg
-                              className={cx(
-                                "h-4 w-4 transition-transform duration-200",
-                                isExpanded ? "rotate-180" : ""
-                              )}
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
+                              className={cx("h-4 w-4 transition-transform duration-200", isExpanded ? "rotate-180" : "")}
+                              viewBox="0 0 20 20" fill="currentColor"
                             >
-                              <path
-                                fillRule="evenodd"
-                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                clipRule="evenodd"
-                              />
+                              <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                             </svg>
                           </button>
 
                           {isExpanded && (
-                            <div className="mt-0.5 ml-3 pl-3 border-l-2 border-blue-100 space-y-0.5 py-1">
+                            <div className="mt-0.5 ml-3 pl-3 border-l-2 border-white/15 space-y-0.5 py-1">
                               {navItem.subItems.map((sub) => (
                                 <Link
                                   key={sub.name}
@@ -437,8 +342,8 @@ export default function Navbar() {
                                   className={cx(
                                     "block rounded-lg px-3 py-2 text-xs font-medium transition-colors duration-150",
                                     isActive(sub.href, currentPath)
-                                      ? "text-blue-700 bg-blue-50"
-                                      : "text-slate-600 hover:bg-blue-50 hover:text-blue-700"
+                                      ? "text-white bg-white/15"
+                                      : "text-white/65 hover:bg-white/10 hover:text-white"
                                   )}
                                 >
                                   {sub.name}
@@ -458,8 +363,8 @@ export default function Navbar() {
                         className={cx(
                           "block rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors duration-150",
                           isActive(navItem.href, currentPath)
-                            ? "text-blue-700 bg-blue-50"
-                            : "text-slate-700 hover:bg-blue-50 hover:text-blue-700"
+                            ? "text-white bg-white/15"
+                            : "text-white/80 hover:bg-white/10 hover:text-white"
                         )}
                       >
                         {name}
@@ -467,12 +372,12 @@ export default function Navbar() {
                     );
                   })}
 
-                  {/* Mobile Register */}
-                  <div className="pt-2.5 pb-1">
+                  {/* Mobile register */}
+                  <div className="pt-3 pb-1">
                     <a
                       href="/68859b12959ec9c788f10d16"
                       onClick={close}
-                      className="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold px-4 py-3 rounded-xl transition-colors duration-200"
+                      className="block w-full text-center bg-white hover:bg-blue-50 text-blue-900 text-sm font-bold px-4 py-3 rounded-xl transition-colors duration-200"
                     >
                       Register Now
                     </a>
