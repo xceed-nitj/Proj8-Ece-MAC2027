@@ -2,16 +2,16 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import FlagCounter from "./FlagCounter";
 
-const quickLinks = [
-  { name: "Home", href: "/" },
-  { name: "Tracks", href: "/6885973a959ec9c788f10545" },
-  { name: "Organising Heads", href: "/688594be959ec9c788f1011b" },
-  { name: "Registration", href: "/68859b12959ec9c788f10d16" },
-  { name: "Location", href: "/6885b8ff959ec9c788f17673" },
-  { name: "Accommodation", href: "/6885b92d959ec9c788f17730" },
-  { name: "Keynote Speakers", href: "/68859782959ec9c788f1056d" },
-  { name: "Contact Us", href: "/6885989c959ec9c788f1084b" },
-];
+// const quickLinks = [
+//   { name: "Home", href: "/" },
+//   { name: "Tracks", href: "/6885973a959ec9c788f10545" },
+//   { name: "Organising Heads", href: "/688594be959ec9c788f1011b" },
+//   { name: "Registration", href: "/68859b12959ec9c788f10d16" },
+//   { name: "Location", href: "/6885b8ff959ec9c788f17673" },
+//   { name: "Accommodation", href: "/6885b92d959ec9c788f17730" },
+//   { name: "Keynote Speakers", href: "/68859782959ec9c788f1056d" },
+//   { name: "Contact Us", href: "/6885989c959ec9c788f1084b" },
+// ];
 
 const contactInfo = [
   {
@@ -31,7 +31,7 @@ const contactInfo = [
       </svg>
     ),
     label: "Phone",
-    value: "Dr. Balwinder Raj: 0181-5037855",
+    value: "Dr. Kundan Kumar: 0181-5037855",
     href: "tel:+911815037855",
   },
   {
@@ -109,9 +109,8 @@ export default function Footer() {
             </div>
 
             <p className="text-sm text-slate-400 leading-relaxed mb-6 max-w-sm">
-              The 2nd International Conference on Electronics, AI and Computing brings
-              together leading researchers and industry experts to explore advances in
-              electronic systems, AI, and computational methodologies.
+              The 4th International Conference on Electronics, AI and Computing brings
+              together leading researchers and industry experts to explore advances in recent technologies.
             </p>
 
             {/* Event detail chips */}
@@ -120,7 +119,7 @@ export default function Footer() {
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                Oct 15–17, 2026
+                April 16–18, 2027
               </span>
               <span className="inline-flex items-center gap-1.5 text-xs text-blue-300 bg-blue-900/30 border border-blue-800/40 rounded-lg px-3 py-1.5">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -133,7 +132,7 @@ export default function Footer() {
           </div>
 
           {/* Quick links */}
-          <div>
+          {/* <div>
             <h4 className="text-xs font-bold tracking-[0.18em] uppercase text-slate-500 mb-5">
               Quick Links
             </h4>
@@ -152,7 +151,7 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </div> */}
 
           {/* Contact */}
           <div>
@@ -190,12 +189,13 @@ export default function Footer() {
               </svg>
             </a>
           </div>
+           <div className="mb-8 flex justify-start">
+          <FlagCounter />
+        </div>
         </div>
 
         {/* Flag counter */}
-        <div className="mb-8 flex justify-start">
-          <FlagCounter />
-        </div>
+       
 
         {/* ── Bottom bar ── */}
         <div
