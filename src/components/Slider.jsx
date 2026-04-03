@@ -293,7 +293,7 @@ const Slider = (props) => {
                     backgroundClip: "text",
                   }}
                 >
-                  Antenna  &amp; and Communication
+                  Antenna  and Communication
                 </span>
               </motion.h1>
 
