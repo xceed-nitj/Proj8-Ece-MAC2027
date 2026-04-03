@@ -21,8 +21,8 @@ const contactInfo = [
       </svg>
     ),
     label: "Email",
-    value: "eaic@nitj.ac.in",
-    href: "mailto:eaic@nitj.ac.in",
+    value: "mac2027@nitj.ac.in",
+    href: "mailto:mac2027@nitj.ac.in",
   },
   {
     icon: (
@@ -102,7 +102,7 @@ export default function Footer() {
                     backgroundClip: "text",
                   }}
                 >
-                  EAIC 2026
+                  MAC 2027
                 </p>
                 <p className="text-[11px] text-slate-500 tracking-wide">International Conference</p>
               </div>
@@ -203,7 +203,7 @@ export default function Footer() {
           style={{ borderColor: "rgba(255,255,255,0.06)" }}
         >
           <p className="text-xs text-slate-600">
-            © 2025 EAIC 2026 · All rights reserved.
+            © 2026 MAC 2027 · All rights reserved.
           </p>
           <p className="text-xs text-slate-600">
             Developed &amp; maintained by{" "}

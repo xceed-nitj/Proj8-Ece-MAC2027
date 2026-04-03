@@ -6,13 +6,11 @@ import { motion, AnimatePresence } from "framer-motion";
 // ─── Static Data ────────────────────────────────────────────────────────────
 
 const heroImages = [
-  "/heroImages/hero1.jpg",
-  "/heroImages/hero2.jpg",
-  "/heroImages/hero3.jpg",
-  "/heroImages/hero9.jpeg",
-  "/heroImages/hero6.jpeg",
-  "/heroImages/hero7.jpeg",
-  "/heroImages/hero8.jpeg",
+  "/heroImages/hero1.png",
+  "/heroImages/hero2.png",
+  "/heroImages/hero3.png",
+  "/heroImages/hero4.png",
+
 ];
 
 // ─── Animation variants ──────────────────────────────────────────────────────
@@ -274,7 +272,7 @@ const Slider = (props) => {
                   }}
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
-                  2nd International Conference · IEEE Technically Co-Sponsored
+                  4th International Conference on
                 </span>
               </motion.div>
 
@@ -284,7 +282,7 @@ const Slider = (props) => {
                 className="font-poppins font-bold text-white leading-[1.08] mb-3 sm:mb-4"
                 style={{ fontSize: "clamp(2.1rem, 5.5vw, 3.9rem)" }}
               >
-                Electronics,
+                Microwave ,
                 <br />
                 <span
                   style={{
@@ -295,7 +293,7 @@ const Slider = (props) => {
                     backgroundClip: "text",
                   }}
                 >
-                  AI &amp; Computing
+                  Antenna  &amp; and Communication
                 </span>
               </motion.h1>
 
@@ -309,7 +307,7 @@ const Slider = (props) => {
                   className="font-poppins text-sm sm:text-[15px] font-semibold tracking-[0.3em] uppercase"
                   style={{ color: "#93c5fd" }}
                 >
-                  EAIC 2026
+                  MAC 2027
                 </span>
                 <div
                   className="h-px w-10 rounded-full"
@@ -344,7 +342,7 @@ const Slider = (props) => {
                       d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                     />
                   </svg>
-                  October 15–17, 2026
+                  April 16–18, 2027
                 </div>
 
                 {/* Location */}

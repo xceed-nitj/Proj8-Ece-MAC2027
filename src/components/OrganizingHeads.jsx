@@ -146,7 +146,7 @@ export default function OrganizingHeads() {
             transition={{ duration: 0.7, delay: 0.3 }}
           />
           <p className="mt-4 text-sm sm:text-base text-slate-500 max-w-xl mx-auto">
-            Meet the distinguished faculty leading EAIC 2026.
+            Meet the distinguished faculty leading MAC 2027.
           </p>
         </motion.div>
 
