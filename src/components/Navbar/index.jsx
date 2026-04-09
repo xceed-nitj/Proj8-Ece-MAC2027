@@ -32,8 +32,8 @@ const navigationRight = [
   },
   { name: "Location", href: "/69cc7ec2993a5edc16baf3cc" },
   { name: "Accommodation", href: "/69cc7ec7993a5edc16baf3f2" },
-  { name: "Keynote Speakers", href: "/68859782959ec9c788f1056d" },
-  { name: "Contact Us", href: "/69cc7eaf993a5edc16baf2ca" },
+  { name: "Keynote Speakers", href: "/69cc7ea8993a5edc16baf25a" },
+  { name: "Contact", href: "/69cc7eaf993a5edc16baf2ca" },
  
 ];
 
