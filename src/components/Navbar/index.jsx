@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 // ─── Nav data ─────────────────────────────────────────────────────────────────
 
 const navigationLeft = [
-  { name: "Home", href: "/" },
+  // { name: "Home", href: "/" },
   { name: "Tracks", href: "/69cc7e9d993a5edc16baf1c0" },
   {
     name: "Committees",
@@ -244,7 +244,7 @@ export default function Navbar() {
                       href="/68859b12959ec9c788f10d16"
                       className="ml-3 flex-shrink-0 inline-flex items-center gap-1.5 bg-white hover:bg-blue-50 text-blue-900 text-[11px] font-bold px-4 py-2 rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-black/20 hover:-translate-y-0.5 tracking-wide"
                     >
-                      Register Now
+                      Register
                     </a>
                   </nav>
 
