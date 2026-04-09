@@ -12,11 +12,11 @@ const navigationLeft = [
     name: "Committees",
     href: "",
     subItems: [
-      { name: "Organising Heads", href: "/688594be959ec9c788f1011b" },
-      { name: "International Advisory Committee", href: "/68859585959ec9c788f10130" },
-      { name: "National Advisory Committee", href: "/688595ab959ec9c788f1018d" },
-      { name: "Technical Committee", href: "/6885960c959ec9c788f1036f" },
-      { name: "Other Committees", href: "/688596b7959ec9c788f10482" },
+      { name: "Organising Heads", href: "/69cc7e87993a5edc16baf0d8" },
+      // { name: "International Advisory Committee", href: "/69cc7e8c993a5edc16baf0fe" },
+      { name: "Advisory Committee", href: "/69cc7e90993a5edc16baf125" },
+      { name: "Technical Committee", href: "/69cc7e95993a5edc16baf14b" },
+      { name: "Other Committees", href: "/69cc7e99993a5edc16baf181" },
     ],
   },
 ];
