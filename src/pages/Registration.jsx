@@ -153,7 +153,7 @@ function Registration() {
 
 
                     <p>
-                        Poster Publication Registration Fee IEEE members Rs. 2000/ and Non-IEEE members Rs. 2500/-. Accepted posters abstract will publish in EAIC2025 abstract book.
+                        Poster Publication Registration Fee IEEE members Rs. 2000/ and Non-IEEE members Rs. 2500/-. Accepted posters abstract will publish in MAC2027 abstract book.
                     </p>
 <p>Kindly note that extra 18% GST would be applicable on all categories of registration i.e. the above mentioned amount is without GST</p>
                 </div>

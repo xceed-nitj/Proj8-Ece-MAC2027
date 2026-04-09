@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 
 const navigationLeft = [
   { name: "Home", href: "/" },
-  { name: "Tracks", href: "/6885973a959ec9c788f10545" },
+  { name: "Tracks", href: "/69cc7e9d993a5edc16baf1c0" },
   {
     name: "Committees",
     href: "",
@@ -26,20 +26,15 @@ const navigationRight = [
     name: "Registration",
     href: "",
     subItems: [
-      { name: "Registration Fee", href: "/6885a873959ec9c788f12867" },
-      { name: "Registration Link", href: "/68859b12959ec9c788f10d16" },
+      { name: "Registration Fee", href: "/69cc7ebb993a5edc16baf397" },
+      { name: "Registration Link", href: "/69cc7eb5993a5edc16baf30e" },
     ],
   },
-  { name: "Location", href: "/6885b8ff959ec9c788f17673" },
-  { name: "Accommodation", href: "/6885b92d959ec9c788f17730" },
+  { name: "Location", href: "/69cc7ec2993a5edc16baf3cc" },
+  { name: "Accommodation", href: "/69cc7ec7993a5edc16baf3f2" },
   { name: "Keynote Speakers", href: "/68859782959ec9c788f1056d" },
-  { name: "Contact Us", href: "/6885989c959ec9c788f1084b" },
-  {
-    name: "EAIC 2025",
-    href: "http://eaic2025.netlify.app",
-    target: "_blank",
-    isExternal: true,
-  },
+  { name: "Contact Us", href: "/69cc7eaf993a5edc16baf2ca" },
+ 
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -217,7 +212,7 @@ export default function Navbar() {
                     <Link to="/" className="flex items-center gap-2" onClick={close}>
                       <img src="/logo.png" alt="NITJ" className="h-7 w-auto object-contain brightness-0 invert" />
                       <span className="text-lg font-bold font-poppins tracking-widest text-white">
-                        EAIC 2026
+                        MAC 2027
                       </span>
                     </Link>
                   </div>
@@ -227,23 +222,18 @@ export default function Navbar() {
 
                     {/* Brand */}
                     <Link to="/" className="flex items-center gap-2.5 flex-shrink-0 mr-5 group">
-                      <img
-                        src="/logo.png"
-                        alt="NIT Jalandhar"
-                        className="h-8 w-auto object-contain brightness-0 invert transition-transform duration-200 group-hover:scale-105"
-                      />
                       <div className="flex flex-col leading-none">
                         <span className="font-poppins text-[15px] font-bold tracking-[0.22em] text-white">
-                          EAIC 2026
+                          MAC 2027
                         </span>
-                        <span className="text-[9px] text-white/45 tracking-[0.15em] uppercase font-medium mt-0.5">
+                        <span className="text-[9px] text-white tracking-[0.15em] uppercase font-medium mt-0.5">
                           NIT Jalandhar
                         </span>
                       </div>
                     </Link>
 
                     {/* Nav items — centred */}
-                    <div className="flex items-center flex-wrap gap-0.5">
+                    <div className="flex items-center text-white/45 flex-wrap gap-0.5">
                       {allNavItems.map((item) => (
                         <DesktopNavItem key={item.name} item={item} currentPath={currentPath} />
                       ))}

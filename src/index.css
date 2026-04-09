@@ -116,13 +116,13 @@
     color: #2563eb;
   }
 
-a, a:visited {
+/* a, a:visited {
   color: inherit !important;
   text-decoration: none !important;
-}
-  a:active {
+} */
+  /* a:active {
     color: #2563eb;
-  }
+  } */
 }
 
 /* navbar link colors are handled by Tailwind utility classes */

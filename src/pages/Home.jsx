@@ -61,13 +61,15 @@ function Home(props) {
       {/* Timeline — light blue tint bg handled inside component */}
       <Timeline confid={props.confId} />
 
-      {/* Countdown Timers — gradient bg handled inside component */}
-      <CountdownBox confid={props.confId} />
+     
 
       {/* About NITJ — subtle blue tint */}
       <section className="bg-gradient-to-b from-blue-50/40 to-white">
         <AboutNITJ confid={props.confId} />
       </section>
+
+       {/* Countdown Timers — gradient bg handled inside component */}
+      <CountdownBox confid={props.confId} />
 
       {/* About Department — white */}
       <section className="bg-white">

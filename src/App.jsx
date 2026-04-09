@@ -6,7 +6,7 @@ import './App.css'
 import CommonTemplate from "./pages/CommonTemplate";
 
 function App() {
-   const confid="6884bd85959ec9c788efbba3";
+   const confid="69cc7e04993a5edc16baf0a3";
   return (
     <>
 

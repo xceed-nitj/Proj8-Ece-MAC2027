@@ -8,8 +8,9 @@ const sliderData = [
   { image: "/img2.jpg", label: "Innovation Hub" },
   { image: "/img3.jpg", label: "Research Center" },
   { image: "/ece2.jpg", label: "Academic Block" },
-
 ];
+
+// ─── SLIDER ─────────────────────────────────────────
 
 function Slider() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -22,74 +23,51 @@ function Slider() {
   }, []);
 
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-lg sm:rounded-xl transform perspective-[1000px]">
+    <div className="relative h-full w-full overflow-hidden rounded-xl bg-white/5 backdrop-blur-md border border-white/10">
       {sliderData.map((slide, index) => (
         <motion.div
           key={index}
-          initial={{ opacity: 0 }}
-          animate={{ 
-            opacity: index === currentSlide ? 1 : 0,
-            rotateY: index === currentSlide ? 0 : 15,
-            scale: index === currentSlide ? 1 : 1.05,
-          }}
-          transition={{ duration: 0.7, ease: "easeInOut" }}
-          className="absolute inset-0 w-full h-full"
+          animate={{ opacity: index === currentSlide ? 1 : 0 }}
+          transition={{ duration: 0.6 }}
+          className="absolute inset-0"
         >
           <div
-            className="absolute inset-0 w-full h-full bg-center bg-cover transition-all duration-1000"
-            style={{ 
-              backgroundImage: `url(${slide.image})`
-            }}
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${slide.image})` }}
           />
 
-          {/* Labels */}
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+
           {index === currentSlide && (
             <motion.div
-              className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 bg-blue-900/60 backdrop-blur-sm px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg"
+              className="absolute bottom-4 left-4 bg-black/40 backdrop-blur px-3 py-1.5 rounded-lg"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.4 }}
             >
-              <p className="text-white text-[10px] xs:text-xs font-medium">{slide.label}</p>
+              <p className="text-white text-xs">{slide.label}</p>
             </motion.div>
           )}
         </motion.div>
       ))}
-
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-blue-900/50 to-transparent"></div>
-
-      {/* Navigation dots */}
-      <div className="absolute bottom-3 sm:bottom-4 right-3 sm:right-4 flex space-x-1 sm:space-x-1.5">
-        {sliderData.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentSlide(index)}
-            className={`w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full transition-all duration-300 ${
-              index === currentSlide ? "bg-white w-4 sm:w-6" : "bg-white/40 hover:bg-white/60"
-            }`}
-            aria-label={`Go to slide ${index + 1}`}
-          />
-        ))}
-      </div>
     </div>
   );
 }
+
+// ─── MAIN COMPONENT ─────────────────────────────────
 
 function AboutNITJ(props) {
   const confid = props.confid;
   const [apiUrl, setApiUrl] = useState(null);
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  // const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     getEnvironment().then((url) => setApiUrl(url));
-  }, []); 
+  }, []);
 
   useEffect(() => {
     if (apiUrl) {
-      setIsLoading(true);
       axios
         .get(`${apiUrl}/conferencemodule/home/conf/${confid}`, {
           withCredentials: true,
@@ -98,178 +76,100 @@ function AboutNITJ(props) {
           setData(res.data);
           setIsLoading(false);
         })
-        .catch((err) => {
-          console.log(err);
-          setIsLoading(false);
-        });
+        .catch(() => setIsLoading(false));
     }
   }, [apiUrl, confid]);
 
-  // Function to highlight keywords in the text
   const highlightKeywords = (text) => {
     if (!text) return "";
     const keywords = ["NIT Jalandhar", "Technology", "Research", "Innovation", "Excellence"];
-    let highlightedText = text;
-    keywords.forEach(keyword => {
-      const regex = new RegExp(keyword, 'gi');
-      highlightedText = highlightedText.replace(regex, `<span class="font-medium text-blue-700">${keyword}</span>`);
+    let output = text;
+    keywords.forEach((word) => {
+      const regex = new RegExp(word, "gi");
+      output = output.replace(
+        regex,
+        `<span class="text-blue-300 font-semibold">${word}</span>`
+      );
     });
-    return highlightedText;
+    return output;
   };
 
   return (
-    <motion.section 
-      className="relative py-10 sm:py-16 md:py-24 w-full bg-gradient-to-b from-blue-50/50 to-white overflow-hidden"
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
-    >
-      {/* Abstract background elements */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute -top-1/2 right-0 w-[400px] sm:w-[600px] md:w-[800px] h-[400px] sm:h-[600px] md:h-[800px] rounded-full bg-gradient-to-br from-blue-100/10 to-transparent"></div>
-        <div className="absolute -bottom-1/2 left-0 w-[300px] sm:w-[400px] md:w-[600px] h-[300px] sm:h-[400px] md:h-[600px] rounded-full bg-gradient-to-tr from-blue-100/10 to-transparent"></div>
-        
-        {/* Grid pattern */}
-        <div className="absolute inset-0 opacity-10" 
-             style={{
-               backgroundImage: 'radial-gradient(circle, #2563eb 1px, transparent 1px)',
-               backgroundSize: '20px 20px'
-             }}>
-        </div>
-        
-        {/* Decorative elements - hide on small screens */}
-        <div className="hidden sm:block absolute top-20 left-40 w-10 sm:w-20 h-10 sm:h-20 border border-blue-200/30 rounded-full"></div>
-        <div className="hidden sm:block absolute bottom-40 right-60 w-16 sm:w-32 h-16 sm:h-32 border border-blue-200/20 rounded-full"></div>
+    <section className="relative py-16 w-full bg-gradient-to-br from-[#0a0f1e] via-[#0f172a] to-[#1e3a8a] text-white overflow-hidden">
+
+      {/* SIGNAL BACKGROUND */}
+      <div className="absolute inset-0 opacity-[0.05]"
+        style={{
+          backgroundImage: `
+            radial-gradient(circle at 20% 30%, white 2px, transparent 2px),
+            radial-gradient(circle at 80% 70%, white 2px, transparent 2px)
+          `,
+          backgroundSize: "120px 120px",
+        }}
+      />
+
+      {/* ANTENNA SVG */}
+      <div className="absolute top-10 right-10 opacity-10">
+        <svg width="120" height="120" stroke="white" fill="none">
+          <circle cx="60" cy="60" r="10" />
+          <path d="M60 20 Q60 60 100 60" strokeWidth="2"/>
+          <path d="M60 20 Q60 60 20 60" strokeWidth="2"/>
+        </svg>
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 relative z-10">
-        {/* Section heading */}
-        <motion.div 
-          className="text-center mb-8 sm:mb-12 md:mb-16"
-          initial={{ y: -20, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          <h2 className="inline-block text-xl sm:text-2xl md:text-3xl font-medium font-poppins text-blue-900 mb-2 sm:mb-3 relative">
+      <div className="container mx-auto px-4 relative z-10">
+
+        {/* HEADER */}
+        <div className="text-center mb-12">
+          <h2 className="text-2xl md:text-3xl font-bold">
             Dr B R Ambedkar National Institute of Technology Jalandhar
-            <motion.div 
-              className="absolute -bottom-1 left-0 w-full h-0.5 sm:h-1 bg-gradient-to-r from-blue-500 to-blue-300 rounded-full"
-              initial={{ width: 0 }}
-              whileInView={{ width: "100%" }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-            ></motion.div>
           </h2>
-          <p className="text-blue-700 mt-2 sm:mt-4 max-w-2xl mx-auto text-xs sm:text-sm">
+          <p className="text-white/60 mt-3 text-sm">
             A premier institution committed to excellence in technical education and research
           </p>
+        </div>
+
+        {/* MAIN CARD */}
+        <motion.div
+          className="max-w-7xl mx-auto bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+
+            {/* CONTENT */}
+            <div className="lg:col-span-3 p-6">
+              {isLoading ? (
+                <div className="animate-pulse space-y-3">
+                  <div className="h-3 bg-white/20 rounded w-3/4"></div>
+                  <div className="h-3 bg-white/20 rounded"></div>
+                </div>
+              ) : (
+                <div
+                  className="text-white/80 text-sm leading-relaxed"
+                  dangerouslySetInnerHTML={{
+                    __html: highlightKeywords(data?.about[1]?.description || ""),
+                  }}
+                />
+              )}
+
+              {/* LOGO + STATS */}
+           
+            </div>
+
+            {/* SLIDER */}
+            <div className="lg:col-span-2 h-[300px] lg:h-full">
+              <Slider />
+            </div>
+
+          </div>
         </motion.div>
 
-        {/* Content Section */}
-        <div className="max-w-7xl mx-auto">
-          <motion.div 
-            className="bg-white rounded-lg sm:rounded-xl shadow-md sm:shadow-xl border border-blue-50 overflow-hidden"
-            whileHover={{ y: -5, boxShadow: "0 25px 50px -12px rgba(37, 99, 235, 0.15)" }}
-            transition={{ duration: 0.3 }}
-            initial={{ y: 50, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true }}
-            // transition={{ duration: 0.5 }}
-          >
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6 md:gap-8">
-              {/* Content Column */}
-              <div className="lg:col-span-3 p-4 sm:p-6 md:p-8">
-                {isLoading ? (
-                  <div className="animate-pulse space-y-3 sm:space-y-4">
-                    <div className="h-3 sm:h-4 bg-blue-100 rounded w-3/4"></div>
-                    <div className="h-3 sm:h-4 bg-blue-100 rounded"></div>
-                    <div className="h-3 sm:h-4 bg-blue-100 rounded w-5/6"></div>
-                    <div className="h-3 sm:h-4 bg-blue-100 rounded w-2/3"></div>
-                  </div>
-                ) : (
-                  <div className="prose prose-sm sm:prose-base md:prose-lg max-w-none">
-                    {data ? (
-                      <div
-                        className="text-xs sm:text-sm md:text-base text-gray-700 leading-relaxed font-light"
-                        dangerouslySetInnerHTML={{
-                          __html: highlightKeywords(data.about[1]?.description || ""),
-                        }}
-                      />
-                    ) : null}
-                  </div>
-                )}
-                
-                {/* Logo and Stats */}
-                <div className="mt-6 sm:mt-8 md:mt-10 flex flex-col md:flex-row items-center justify-between border-t border-blue-100 pt-4 sm:pt-6">
-                  {/* Logo */}
-                  <div className="flex-shrink-0 mb-4 md:mb-0">
-                    <img 
-                      src="/nitjlogo.png" 
-                      alt="NITJ Logo" 
-                      className="h-12 sm:h-16 object-contain"
-                    />
-                  </div>
-                  
-                  {/* Quick stats */}
-                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                    <div className="text-center">
-                      <p className="text-xl sm:text-2xl font-bold text-blue-700">1987</p>
-                      <p className="text-[10px] sm:text-xs text-gray-500">ESTABLISHED</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-xl sm:text-2xl font-bold text-blue-700">A+</p>
-                      <p className="text-[10px] sm:text-xs text-gray-500">NAAC GRADE</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+        {/* FEATURES */}
+      
 
-              {/* Image Column */}
-              <div className="lg:col-span-2 h-[250px] sm:h-[300px] md:h-[350px] lg:h-auto relative">
-                <Slider />
-              </div>
-            </div>
-          </motion.div>
-          
-          {/* Key Features */}
-          <div className="mt-8 sm:mt-12 md:mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-            {[
-              { 
-                icon: "🎓",
-                title: "Academic Excellence", 
-                description: "Committed to providing quality education through innovative teaching methods."
-              },
-              { 
-                icon: "🔬",
-                title: "Research Focus", 
-                description: "Advancing knowledge through cutting-edge research in various technological domains."
-              },
-              { 
-                icon: "🌐",
-                title: "Global Vision", 
-                description: "Creating global citizens equipped with skills for the international arena."
-              }
-            ].map((feature, idx) => (
-              <motion.div 
-                key={idx}
-                className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-sm sm:shadow-md border border-blue-50 flex flex-col items-start"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: 0.1 * idx }}
-                whileHover={{ y: -5, boxShadow: "0 15px 30px -10px rgba(37, 99, 235, 0.1)" }}
-              >
-                <span className="text-2xl sm:text-3xl mb-2 sm:mb-3">{feature.icon}</span>
-                <h3 className="text-base sm:text-lg md:text-xl font-medium text-blue-900 mb-1 sm:mb-2">{feature.title}</h3>
-                <p className="text-xs sm:text-sm text-gray-600">{feature.description}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
       </div>
-    </motion.section>
+    </section>
   );
 }
 

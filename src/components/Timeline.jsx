@@ -202,9 +202,6 @@ const Timeline = forwardRef((props, ref) => {
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.3 }}
           />
-          <p className="mt-4 text-sm sm:text-base text-slate-500 max-w-xl mx-auto">
-            Mark your calendar — these key deadlines keep you on track for EAIC 2026.
-          </p>
         </motion.div>
 
         {/* ── Loading skeleton ── */}
