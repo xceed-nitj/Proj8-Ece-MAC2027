@@ -18,7 +18,7 @@ import Navbar from "../components/Navbar";
 // import InvitedSpeaker from "../components/InvitedSpeaker";
 // import VideoGallery from "../components/VideoGallery";
 // import DriveLinks from "../components/Drivelink";
-import OrganizingHeads from "../components/OrganizingHeads";
+// import OrganizingHeads from "../components/OrganizingHeads";
 import AboutConf from "../components/Aboutconf.jsx";
 // import AboutNews from "./components/Dummy";
 
@@ -77,7 +77,7 @@ function Home(props) {
       </section>
 
       {/* Organizing Committee — white */}
-      <OrganizingHeads />
+  
 
       {/* Microsoft CMT notice */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
