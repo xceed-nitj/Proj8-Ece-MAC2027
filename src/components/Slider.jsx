@@ -393,7 +393,7 @@ const Slider = (props) => {
               >
                 {/* Primary */}
                 <a
-                  href="/68859b12959ec9c788f10d16"
+                  href="/69cc7ebb993a5edc16baf397"
                   className="group relative inline-flex items-center gap-2 overflow-hidden rounded-xl bg-blue-600 px-6 sm:px-7 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:bg-blue-500 hover:shadow-blue-600/40 hover:-translate-y-0.5 active:translate-y-0"
                   style={{ boxShadow: "0 4px 24px rgba(37,99,235,0.35)" }}
                 >
@@ -416,7 +416,7 @@ const Slider = (props) => {
 
                 {/* Secondary */}
                 <a
-                  href="/68859b12959ec9c788f10d16"
+                  href="/69cc7eb5993a5edc16baf30e"
                   className="inline-flex items-center gap-2 rounded-xl px-6 sm:px-7 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-white/20 hover:-translate-y-0.5"
                   style={{
                     background: "rgba(255,255,255,0.1)",
@@ -428,7 +428,7 @@ const Slider = (props) => {
 
                 {/* Tertiary */}
                 <a
-                  href="/6885989c959ec9c788f1084b"
+                  href="/69cc7eaf993a5edc16baf2ca"
                   className="inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-medium text-blue-200 backdrop-blur-sm transition-all duration-300 hover:text-white hover:-translate-y-0.5"
                   style={{
                     background: "rgba(255,255,255,0.04)",
@@ -581,23 +581,12 @@ const Slider = (props) => {
           </p>
           <div className="flex flex-wrap justify-center gap-2">
             <a
-              href="/68859b12959ec9c788f10d16"
+              href="/69cc7eb5993a5edc16baf30e"
               className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-all duration-200 hover:shadow-md hover:shadow-blue-200 hover:-translate-y-0.5"
             >
               Submit Paper
             </a>
-            <a
-              href="/68859b12959ec9c788f10d16"
-              className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-xs font-semibold px-4 py-2 rounded-lg transition-all duration-200 hover:-translate-y-0.5"
-            >
-              Register Now
-            </a>
-            <a
-              href="/6885989c959ec9c788f1084b"
-              className="bg-gray-50 border border-gray-200 hover:bg-gray-100 text-gray-600 text-xs font-semibold px-4 py-2 rounded-lg transition-all duration-200 hover:-translate-y-0.5"
-            >
-              Contact Us
-            </a>
+           
           </div>
         </div>
       </div>
