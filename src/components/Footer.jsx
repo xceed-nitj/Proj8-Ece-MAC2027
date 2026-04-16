@@ -109,7 +109,7 @@ export default function Footer() {
             </div>
 
             <p className="text-sm text-slate-400 leading-relaxed mb-6 max-w-sm">
-              The 4th International Conference on Electronics, AI and Computing brings
+              The International Conference MAC 2027 brings
               together leading researchers and industry experts to explore advances in recent technologies.
             </p>
 
