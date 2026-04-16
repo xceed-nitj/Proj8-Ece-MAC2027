@@ -210,7 +210,7 @@ export default function Navbar() {
                     </Disclosure.Button>
 
                     <Link to="/" className="flex items-center gap-2" onClick={close}>
-                      <img src="/logo.png" alt="NITJ" className="h-7 w-auto object-contain brightness-0 invert" />
+                      {/* <img src="/logo.png" alt="NITJ" className="h-7 w-auto object-contain brightness-0 invert" /> */}
                       <span className="text-lg font-bold font-poppins tracking-widest text-white">
                         MAC 2027
                       </span>
@@ -323,7 +323,7 @@ export default function Navbar() {
                           </button>
 
                           {isExpanded && (
-                            <div className="mt-0.5 ml-3 pl-3 border-l-2 border-white/15 space-y-0.5 py-1">
+                            <div className="mt-1 ml-3 pl-3 border-l-2 border-blue-100 bg-white rounded-lg space-y-0.5 py-2">
                               {navItem.subItems.map((sub) => (
                                 <Link
                                   key={sub.name}
