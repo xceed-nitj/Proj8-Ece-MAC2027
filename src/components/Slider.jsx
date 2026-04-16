@@ -213,23 +213,22 @@ const Slider = (props) => {
 
         {/* ── NITJ Logo ── */}
        <motion.div
-  className="absolute top-10 left-1/2 -translate-x-1/2 -translate-y-1/2 
-             z-[15] flex flex-row items-center justify-center gap-6"
+  className="absolute w-full top-10 -translate-x-1/2 
+             z-[15] flex items-center justify-center gap-6"
   initial={{ opacity: 0, y: -18 }}
   animate={{ opacity: 1, y: 0 }}
   transition={{ delay: 0.2, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
 >
+ <div className="w-full items-center flex justify-center gap-4 sm:gap-6">
   <img
     src="/logo.png"
-    alt="NIT Jalandhar Logo"
-    className="h-14 sm:h-16 w-auto object-contain drop-shadow-xl"
+    className="h-10 sm:h-14 object-contain"
   />
-
   <img
     src="/MNIT_logo.png"
-    alt="MNIT Logo"
-    className="h-14 sm:h-16 w-auto object-contain drop-shadow-xl"
+    className="h-10 sm:h-14 object-contain"
   />
+</div>
 </motion.div>
 
 
@@ -584,7 +583,7 @@ const Slider = (props) => {
               href="/69cc7eb5993a5edc16baf30e"
               className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-all duration-200 hover:shadow-md hover:shadow-blue-200 hover:-translate-y-0.5"
             >
-              Submit Paper
+              Call for Papers
             </a>
            
           </div>
