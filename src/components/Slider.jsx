@@ -222,11 +222,11 @@ const Slider = (props) => {
  <div className="w-full items-center flex justify-center gap-4 sm:gap-6">
   <img
     src="/logo.png"
-    className="h-10 sm:h-14 object-contain"
+    className="h-16 sm:h-20 md:h-24 object-contain"
   />
   <img
     src="/MNIT_logo.png"
-    className="h-10 sm:h-14 object-contain"
+    className="h-16 sm:h-20 md:h-24 object-contain"
   />
 </div>
 </motion.div>
