@@ -5,40 +5,16 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import { motion } from "framer-motion";
 
-const CommonTemplate = ({ confid }) => {
-  const [data, setData] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const { templateid } = useParams();
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [templateid]);
-
-  useEffect(() => {
-    setIsLoading(true);
-    (async () => {
-      try {
-        const apiUrl = await getEnvironment();
-        const res = await fetch(
-          `${apiUrl}/conferencemodule/commontemplate/${confid}/${templateid}`,
-          { method: "GET", credentials: "include", headers: { "Content-Type": "application/json" } }
-        );
-        if (!res.ok) throw new Error("Network response was not ok");
-        setData(await res.json());
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
-    })();
-  }, [confid, templateid]);
-
-  const pageTitle = data?.pageTitle || "";
+// Shared page chrome (Navbar + blue hero header + Footer) used by every page
+// that wants the "common template" look. Edit this once and every page that
+// renders <PageShell> picks up the change — CommonTemplate itself included.
+export function PageShell({ confid, title, breadcrumbLabel, loading, maxWidth = "max-w-5xl", children }) {
+  const crumb = breadcrumbLabel ?? (typeof title === "string" ? title : "");
 
   return (
     <div className="min-h-screen bg-white">
       {/* Navbar — sticky via its own component */}
-      <Navbar />
+      <Navbar confid={confid} />
 
       {/* ── Blue hero header ── */}
       <div className="relative w-full overflow-hidden" style={{ minHeight: "200px" }}>
@@ -97,7 +73,7 @@ const CommonTemplate = ({ confid }) => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
             <span className="text-blue-200/80 text-xs font-medium truncate max-w-[200px]">
-              {isLoading ? "Loading…" : pageTitle}
+              {loading ? "Loading…" : crumb}
             </span>
           </motion.div>
 
@@ -109,10 +85,10 @@ const CommonTemplate = ({ confid }) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            {isLoading ? (
+            {loading ? (
               <span className="inline-block w-64 h-9 bg-white/10 rounded-lg animate-pulse" />
             ) : (
-              <span dangerouslySetInnerHTML={{ __html: pageTitle }} />
+              title
             )}
           </motion.h1>
 
@@ -123,7 +99,7 @@ const CommonTemplate = ({ confid }) => {
               background: "linear-gradient(90deg, #60a5fa, #93c5fd)",
               width: 0,
             }}
-            animate={{ width: isLoading ? 0 : "56px" }}
+            animate={{ width: loading ? 0 : "56px" }}
             transition={{ duration: 0.7, delay: 0.4 }}
           />
         </div>
@@ -131,59 +107,99 @@ const CommonTemplate = ({ confid }) => {
 
       {/* ── Content ── */}
       <main className="min-h-[40vh] bg-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
-          {isLoading ? (
-            <div className="space-y-4 animate-pulse">
-              {[...Array(8)].map((_, i) => (
-                <div
-                  key={i}
-                  className="h-4 bg-blue-50 rounded"
-                  style={{ width: `${65 + Math.random() * 35}%` }}
-                />
-              ))}
-            </div>
-          ) : data ? (
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55 }}
-              className="prose prose-sm sm:prose-base lg:prose-lg max-w-none
-                         prose-headings:text-slate-800 prose-headings:font-poppins
-                         prose-p:text-slate-600 prose-p:leading-relaxed
-                         prose-a:text-blue-600 prose-a:no-underline hover:prose-a:text-blue-700
-                         prose-strong:text-slate-800
-                         prose-li:text-slate-600
-                         prose-table:border-blue-100
-                         prose-th:bg-blue-50 prose-th:text-blue-800
-                         prose-td:border-blue-50"
-              dangerouslySetInnerHTML={{ __html: data.description }}
-            />
-          ) : (
-            <div className="text-center py-20">
-              <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-8 w-8 text-blue-300"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                  />
-                </svg>
-              </div>
-              <p className="text-slate-400 text-sm">Content not available.</p>
-            </div>
-          )}
-        </div>
+        <div className={`${maxWidth} mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14`}>{children}</div>
       </main>
 
       <Footer />
     </div>
+  );
+}
+
+const CommonTemplate = ({ confid }) => {
+  const [data, setData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const { templateid } = useParams();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [templateid]);
+
+  useEffect(() => {
+    setIsLoading(true);
+    (async () => {
+      try {
+        const apiUrl = await getEnvironment();
+        const res = await fetch(
+          `${apiUrl}/conferencemodule/commontemplate/${confid}/${templateid}`,
+          { method: "GET", credentials: "include", headers: { "Content-Type": "application/json" } }
+        );
+        if (!res.ok) throw new Error("Network response was not ok");
+        setData(await res.json());
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    })();
+  }, [confid, templateid]);
+
+  const pageTitle = data?.pageTitle || "";
+
+  return (
+    <PageShell
+      confid={confid}
+      loading={isLoading}
+      breadcrumbLabel={pageTitle}
+      title={<span dangerouslySetInnerHTML={{ __html: pageTitle }} />}
+    >
+      {isLoading ? (
+        <div className="space-y-4 animate-pulse">
+          {[...Array(8)].map((_, i) => (
+            <div
+              key={i}
+              className="h-4 bg-blue-50 rounded"
+              style={{ width: `${65 + Math.random() * 35}%` }}
+            />
+          ))}
+        </div>
+      ) : data ? (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55 }}
+          className="prose prose-sm sm:prose-base lg:prose-lg max-w-none
+                     prose-headings:text-slate-800 prose-headings:font-poppins
+                     prose-p:text-slate-600 prose-p:leading-relaxed
+                     prose-a:text-blue-600 prose-a:no-underline hover:prose-a:text-blue-700
+                     prose-strong:text-slate-800
+                     prose-li:text-slate-600
+                     prose-table:border-blue-100
+                     prose-th:bg-blue-50 prose-th:text-blue-800
+                     prose-td:border-blue-50"
+          dangerouslySetInnerHTML={{ __html: data.description }}
+        />
+      ) : (
+        <div className="text-center py-20">
+          <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-8 w-8 text-blue-300"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+          </div>
+          <p className="text-slate-400 text-sm">Content not available.</p>
+        </div>
+      )}
+    </PageShell>
   );
 };
 

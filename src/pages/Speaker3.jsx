@@ -1,0 +1,159 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
+import getEnvironment from "../getenvironment";
+import { PageShell } from "./CommonTemplate";
+
+// Resolve image links: uploads from the admin panel are absolute URLs, but
+// hand-pasted relative paths (/uploads/...) must point at the API server,
+// not this site's origin.
+function resolveImgSrc(link, apiUrl) {
+  if (!link) return "";
+  if (/^https?:\/\//i.test(link)) return link;
+  return `${apiUrl}${link.startsWith("/") ? "" : "/"}${link}`;
+}
+
+// Design 3 — full-bleed photo with a navy gradient overlay (matches the
+// hero header treatment used across the site).
+function SpeakerCard({ speaker, apiUrl }) {
+  const [imgFailed, setImgFailed] = useState(false);
+  const imgSrc = resolveImgSrc(speaker.ImgLink, apiUrl);
+  const hasImg = imgSrc && !imgFailed;
+
+  const card = (
+    <div className="group relative w-full h-[300px] rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300">
+      {hasImg ? (
+        <img
+          src={imgSrc}
+          alt={speaker.Name}
+          className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          onError={() => setImgFailed(true)}
+        />
+      ) : (
+        <div
+          className="absolute inset-0 flex items-center justify-center text-6xl font-bold font-poppins text-blue-200"
+          style={{ background: "linear-gradient(135deg, #0a0f1e 0%, #0f172a 35%, #1e3a8a 75%, #1d4ed8 100%)" }}
+        >
+          {(speaker.Name || "?").trim().charAt(0).toUpperCase()}
+        </div>
+      )}
+      <div
+        className="absolute inset-0"
+        style={{ background: "linear-gradient(180deg, transparent 40%, rgba(10,15,30,0.92) 100%)" }}
+      />
+      <div className="absolute bottom-0 left-0 right-0 p-4">
+        <p className="font-poppins text-[16px] font-bold text-white">{speaker.Name}</p>
+        {speaker.Designation && (
+          <p className="font-sans text-[11px] font-medium text-blue-100/90 mt-0.5">{speaker.Designation}</p>
+        )}
+        <p className="font-sans text-[11px] font-semibold text-blue-300 mt-0.5">{speaker.Institute}</p>
+      </div>
+    </div>
+  );
+
+  return speaker.ProfileLink ? (
+    <a href={speaker.ProfileLink} target="_blank" rel="noopener noreferrer" className="block h-full">
+      {card}
+    </a>
+  ) : (
+    card
+  );
+}
+
+function Speaker3(props) {
+  const confid = props.confid;
+  const [speakers, setSpeakers] = useState([]);
+  const [invitedSpeakers, setInvitedSpeakers] = useState([]);
+  const [apiUrl, setApiUrl] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [showInvited, setShowInvited] = useState(false);
+
+  useEffect(() => {
+    getEnvironment()
+      .then((url) => setApiUrl(url))
+      .catch((err) => console.error("Error fetching environment:", err));
+  }, []);
+
+  useEffect(() => {
+    if (!apiUrl || !confid) return;
+    setLoading(true);
+    axios
+      .get(`${apiUrl}/conferencemodule/speakers/conference/${confid}`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        const all = Array.isArray(res.data) ? res.data : [];
+        const visible = all.filter((s) => s.feature !== false);
+        const bySequence = (a, b) => (a.sequence ?? 999) - (b.sequence ?? 999);
+        const isInvited = (s) => String(s.TalkType ?? "").trim() === "1";
+
+        setSpeakers(visible.filter((s) => !isInvited(s)).sort(bySequence));
+        setInvitedSpeakers(visible.filter(isInvited).sort(bySequence));
+      })
+      .catch((err) => console.error("Error fetching speakers:", err))
+      .finally(() => setLoading(false));
+  }, [apiUrl, confid]);
+
+  const activeList = showInvited ? invitedSpeakers : speakers;
+  const pageTitle = showInvited ? "Invited Speakers" : "Our Speakers";
+
+  return (
+    <PageShell confid={confid} title={pageTitle} breadcrumbLabel="Speakers" maxWidth="max-w-7xl">
+      {invitedSpeakers.length > 0 && (
+        <div className="flex justify-center gap-3 mb-8">
+          <button
+            onClick={() => setShowInvited(false)}
+            className={`px-5 py-2 rounded-full text-sm font-semibold transition-colors duration-200 ${
+              !showInvited ? "bg-blue-600 text-white shadow-sm" : "bg-blue-50 text-blue-700 hover:bg-blue-100"
+            }`}
+          >
+            Our Speakers
+          </button>
+          <button
+            onClick={() => setShowInvited(true)}
+            className={`px-5 py-2 rounded-full text-sm font-semibold transition-colors duration-200 ${
+              showInvited ? "bg-blue-600 text-white shadow-sm" : "bg-blue-50 text-blue-700 hover:bg-blue-100"
+            }`}
+          >
+            Invited Speakers
+          </button>
+        </div>
+      )}
+
+      {loading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 animate-pulse">
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="w-full h-[300px] rounded-2xl bg-blue-50" />
+          ))}
+        </div>
+      ) : activeList.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {activeList.map((speaker) => (
+            <SpeakerCard key={speaker._id} speaker={speaker} apiUrl={apiUrl} />
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-20">
+          <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-8 w-8 text-blue-300"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+          </div>
+          <p className="text-slate-400 text-sm">Speaker details will be announced soon.</p>
+        </div>
+      )}
+    </PageShell>
+  );
+}
+
+export default Speaker3;
