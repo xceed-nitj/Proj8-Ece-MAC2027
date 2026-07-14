@@ -380,7 +380,7 @@ export default function Navbar({ confid }) {
                     {/* Nav items — single line, auto-shrinks to fit (skeleton while loading) */}
                     <div
                       ref={itemsRef}
-                      className="flex flex-1 min-w-0 items-center justify-center text-white/45 flex-nowrap overflow-hidden"
+                      className="flex flex-1 min-w-0 items-center justify-center text-white/45 flex-nowrap"
                       style={{ gap: "var(--nav-gap, 4px)" }}
                     >
                       {loadingNav ? (

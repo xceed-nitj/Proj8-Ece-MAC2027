@@ -24,12 +24,13 @@ function App() {
         <Route path="news/:newsid" element={<CommonNews /> } />
         {/* <Route path="commontemplate" element={<IntCommittee />} /> */}
 
-        {/* Speaker page layout previews — pick one, then remove the rest */}
-        <Route path="/speaker1" element={<Speaker1 confid={confid} />} />
-        <Route path="/speaker2" element={<Speaker2 confid={confid} />} />
-        <Route path="/speaker3" element={<Speaker3 confid={confid} />} />
-        <Route path="/speaker4" element={<Speaker4 confid={confid} />} />
-        <Route path="/speaker5" element={<Speaker5 confid={confid} />} />
+        {/* Speaker page designs — admin panel picks which one is "live" by
+            pointing the nav link's URL at /speakers1 .. /speakers5 */}
+        <Route path="/speakers1" element={<Speaker1 confid={confid} />} />
+        <Route path="/speakers2" element={<Speaker2 confid={confid} />} />
+        <Route path="/speakers3" element={<Speaker3 confid={confid} />} />
+        <Route path="/speakers4" element={<Speaker4 confid={confid} />} />
+        <Route path="/speakers5" element={<Speaker5 confid={confid} />} />
 
         <Route path="/:templateid" element={<CommonTemplate confid={confid} />} />
 
