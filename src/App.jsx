@@ -9,6 +9,7 @@ import Speaker2 from "./pages/Speaker2";
 import Speaker3 from "./pages/Speaker3";
 import Speaker4 from "./pages/Speaker4";
 import Speaker5 from "./pages/Speaker5";
+import DateDesigns from "./pages/DateDesigns";
 
 function App() {
    const confid="69cc7e04993a5edc16baf0a3";
@@ -31,6 +32,9 @@ function App() {
         <Route path="/speakers3" element={<Speaker3 confid={confid} />} />
         <Route path="/speakers4" element={<Speaker4 confid={confid} />} />
         <Route path="/speakers5" element={<Speaker5 confid={confid} />} />
+
+        {/* Preview of countdown / event-dates design variants (1-3 each) */}
+        <Route path="/datedesigns" element={<DateDesigns confid={confid} />} />
 
         <Route path="/:templateid" element={<CommonTemplate confid={confid} />} />
 

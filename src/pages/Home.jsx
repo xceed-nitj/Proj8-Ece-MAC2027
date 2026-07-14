@@ -63,7 +63,9 @@ function Home(props) {
     return () => { cancelled = true; };
   }, [apiUrl, confId]);
 
-  // Map each admin-panel section key to its component/block.
+  // Map each admin-panel section key to its component/block. Timeline and
+  // CountdownBox pick their design themselves from the homecustomisation
+  // endpoint (see useComponentDesign), so no design prop is passed here.
   const SECTION_RENDERERS = {
     slider: () => <Slider confid={confId} />,
     aboutConf: () => (
@@ -116,7 +118,7 @@ function Home(props) {
           .filter((s) => s.visible)
           .map((s) => {
             const render = SECTION_RENDERERS[s.key];
-            return render ? <div key={s.key}>{render()}</div> : null;
+            return render ? <div key={s.key}>{render(s)}</div> : null;
           })
       )}
 

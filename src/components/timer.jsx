@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import axios from 'axios';
 import getEnvironment from '../getenvironment';
+import useComponentDesign from '../useComponentDesign';
 
 // Utility to compute time left
 const getTimeLeft = (targetDate) => {
@@ -13,6 +14,10 @@ const getTimeLeft = (targetDate) => {
     seconds:Math.max(0, Math.floor((diff / 1000) % 60)),
   };
 };
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Design 1 — 3D flip cards with coloured headers (default / original design)
+// ═══════════════════════════════════════════════════════════════════════════
 
 // 3D flip animation for each digit
 const CountdownDigit = ({ value, label, color, animate }) => {
@@ -164,12 +169,229 @@ const CountdownCard = ({ title, time, mainColor, delay, description }) => {
   );
 };
 
-// Top‐level timer component
-const CountdownTimer = ({ confid }) => {
+const CountdownDesign1 = ({ cards }) => (
+  <section
+    className="relative py-8 sm:py-12 md:py-16 px-4 sm:px-6 md:px-8
+               overflow-hidden bg-gradient-to-b from-blue-50/40 to-white"
+  >
+    {/* Background */}
+    <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute w-full h-full bg-grid-pattern opacity-5" />
+    </div>
+
+    {/* Title */}
+    <div className="relative mb-8 sm:mb-12 text-center">
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-medium text-blue-900">
+        Important Dates
+      </h2>
+      <div className="mt-2 sm:mt-3">
+        <p className="text-xs sm:text-sm md:text-base text-blue-600 max-w-2xl mx-auto">
+          Mark your calendar for these key deadlines and events
+        </p>
+      </div>
+    </div>
+
+    {/* Cards */}
+    <div className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4
+                    gap-4 sm:gap-6 md:gap-8 max-w-7xl mx-auto">
+      {cards.map(({ title, color, description, time, index }) => (
+        time && (
+          <CountdownCard
+            key={title}
+            title={title}
+            time={time}
+            mainColor={color}
+            delay={index}
+            description={description}
+          />
+        )
+      ))}
+    </div>
+  </section>
+);
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Design 2 — dark navy band with glassmorphism cards (matches the site's
+// hero-header gradient), big mono digits including live seconds
+// ═══════════════════════════════════════════════════════════════════════════
+
+const GlassUnit = ({ value, label }) => (
+  <div className="flex flex-col items-center min-w-[42px]">
+    <span className="font-mono font-bold text-white text-2xl sm:text-3xl tabular-nums leading-none">
+      {String(value ?? 0).padStart(2, '0')}
+    </span>
+    <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.15em] text-blue-200/80 mt-1.5">
+      {label}
+    </span>
+  </div>
+);
+
+const GlassColon = () => (
+  <span className="text-white/30 font-mono text-xl sm:text-2xl leading-none pb-4 select-none">:</span>
+);
+
+const CountdownDesign2 = ({ cards }) => (
+  <section
+    className="relative py-12 sm:py-16 px-4 sm:px-6 md:px-8 overflow-hidden"
+    style={{
+      background:
+        'linear-gradient(135deg, #0a0f1e 0%, #0f172a 35%, #1e3a8a 75%, #1d4ed8 100%)',
+    }}
+  >
+    {/* Dot grid */}
+    <div
+      className="absolute inset-0 pointer-events-none opacity-[0.055]"
+      style={{
+        backgroundImage:
+          'radial-gradient(circle, rgba(255,255,255,0.9) 1px, transparent 1px)',
+        backgroundSize: '28px 28px',
+      }}
+    />
+
+    <div className="relative max-w-7xl mx-auto">
+      {/* Title */}
+      <div className="text-center mb-10 sm:mb-12">
+        <span className="inline-block text-xs font-bold tracking-[0.2em] uppercase text-blue-300 mb-3">
+          Countdown
+        </span>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-poppins font-bold text-white">
+          Important Dates
+        </h2>
+        <div
+          className="mx-auto mt-4 h-1 w-14 rounded-full"
+          style={{ background: 'linear-gradient(90deg, #60a5fa, #93c5fd)' }}
+        />
+      </div>
+
+      {/* Glass cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {cards.map(({ title, description, time }, i) => (
+          time && (
+            <motion.div
+              key={title}
+              className="rounded-2xl border border-white/15 bg-white/10 backdrop-blur-md p-5 hover:bg-white/[0.14] transition-colors duration-200"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+            >
+              <h3 className="text-sm sm:text-[15px] font-poppins font-semibold text-white">
+                {title}
+              </h3>
+              <p className="text-[11px] text-blue-100/70 mt-1 mb-5 min-h-[28px] leading-relaxed">
+                {description}
+              </p>
+              <div className="flex items-end justify-center gap-1.5 sm:gap-2">
+                <GlassUnit value={time.days} label="days" />
+                <GlassColon />
+                <GlassUnit value={time.hours} label="hrs" />
+                <GlassColon />
+                <GlassUnit value={time.minutes} label="min" />
+                <GlassColon />
+                <GlassUnit value={time.seconds} label="sec" />
+              </div>
+            </motion.div>
+          )
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Design 3 — minimal light list: one row per deadline with an accent bar on
+// the left and inline digits on the right
+// ═══════════════════════════════════════════════════════════════════════════
+
+const InlineUnit = ({ value, label }) => (
+  <div className="flex flex-col items-center min-w-[46px]">
+    <span className="font-mono font-bold text-blue-900 text-xl sm:text-2xl tabular-nums leading-none">
+      {String(value ?? 0).padStart(2, '0')}
+    </span>
+    <span className="text-[9px] uppercase tracking-wider text-slate-400 mt-1">
+      {label}
+    </span>
+  </div>
+);
+
+const CountdownDesign3 = ({ cards }) => (
+  <section className="relative py-12 sm:py-16 px-4 sm:px-6 md:px-8 bg-white">
+    <div className="max-w-4xl mx-auto">
+      {/* Title */}
+      <div className="text-center mb-10">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-poppins font-bold text-slate-900">
+          Important Dates
+        </h2>
+        <div
+          className="mx-auto mt-4 h-1 w-14 rounded-full"
+          style={{ background: 'linear-gradient(90deg, #2563eb, #60a5fa)' }}
+        />
+        <p className="mt-3 text-xs sm:text-sm text-slate-500">
+          Mark your calendar for these key deadlines and events
+        </p>
+      </div>
+
+      {/* Rows */}
+      <div className="bg-white border border-blue-100 rounded-2xl divide-y divide-blue-50 shadow-sm overflow-hidden">
+        {cards.map(({ title, color, description, time }, i) => (
+          time && (
+            <motion.div
+              key={title}
+              className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6 px-5 sm:px-7 py-5"
+              initial={{ opacity: 0, x: -24 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45, delay: i * 0.08 }}
+            >
+              {/* Accent bar + text */}
+              <div className="flex items-start gap-4 flex-1 min-w-0">
+                <span
+                  className="w-1 self-stretch rounded-full flex-shrink-0"
+                  style={{ background: `linear-gradient(180deg, ${color}, #60a5fa)` }}
+                />
+                <div className="min-w-0">
+                  <h3 className="text-sm sm:text-base font-poppins font-semibold text-slate-800">
+                    {title}
+                  </h3>
+                  <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-relaxed">
+                    {description}
+                  </p>
+                </div>
+              </div>
+
+              {/* Inline digits */}
+              <div className="flex items-start gap-2 sm:gap-3 md:flex-shrink-0 pl-5 md:pl-0">
+                <InlineUnit value={time.days} label="days" />
+                <InlineUnit value={time.hours} label="hrs" />
+                <InlineUnit value={time.minutes} label="min" />
+                <InlineUnit value={time.seconds} label="sec" />
+              </div>
+            </motion.div>
+          )
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Top-level component — fetches dates once, then renders the design chosen
+// from the admin panel (homecustomisation's "countdown" component). An
+// explicit `design` prop (used by the /datedesigns preview page) overrides
+// the fetch; any missing or unknown value falls back to design 1.
+// ═══════════════════════════════════════════════════════════════════════════
+
+const COUNTDOWN_DESIGNS = {
+  1: CountdownDesign1,
+  2: CountdownDesign2,
+  3: CountdownDesign3,
+};
+
+const CountdownTimer = ({ confid, design }) => {
+  const designNo = useComponentDesign(confid, "countdown", design);
   const [datesData, setDatesData] = useState([]);
   const [times, setTimes]     = useState({});
   const [apiUrl, setApiUrl]   = useState(null);
-  const sectionRef = useRef(null);
 
   // 1. get base URL
   useEffect(() => {
@@ -243,47 +465,8 @@ const CountdownTimer = ({ confid }) => {
     },
   ];
 
-  return (
-    <section
-      ref={sectionRef}
-      className="relative py-8 sm:py-12 md:py-16 px-4 sm:px-6 md:px-8
-                 overflow-hidden bg-gradient-to-b from-blue-50/40 to-white"
-    >
-      {/* Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute w-full h-full bg-grid-pattern opacity-5" />
-      </div>
-
-      {/* Title */}
-      <div className="relative mb-8 sm:mb-12 text-center">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-medium text-blue-900">
-          Important Dates
-        </h2>
-        <div className="mt-2 sm:mt-3">
-          <p className="text-xs sm:text-sm md:text-base text-blue-600 max-w-2xl mx-auto">
-            Mark your calendar for these key deadlines and events
-          </p>
-        </div>
-      </div>
-
-      {/* Cards */}
-      <div className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4
-                      gap-4 sm:gap-6 md:gap-8 max-w-7xl mx-auto">
-        {cardData.map(({ title, color, description, time, index }) => (
-          time && (
-            <CountdownCard
-              key={title}
-              title={title}
-              time={time}
-              mainColor={color}
-              delay={index}
-              description={description}
-            />
-          )
-        ))}
-      </div>
-    </section>
-  );
+  const Design = COUNTDOWN_DESIGNS[designNo] || CountdownDesign1;
+  return <Design cards={cardData} />;
 };
 
 export default CountdownTimer;

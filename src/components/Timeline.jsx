@@ -1,6 +1,7 @@
 // src/components/Timeline.jsx
 import axios from "axios";
 import getEnvironment from "../getenvironment";
+import useComponentDesign from "../useComponentDesign";
 import { useState, useEffect, forwardRef } from "react";
 import formatDate from "../utility/formatDate";
 import { motion } from "framer-motion";
@@ -47,10 +48,40 @@ const accents = [
   { from: "#1e3a8a", to: "#1d4ed8", light: "#dbeafe", text: "#172554" },
 ];
 
+// Date chip + extended badge — shared by all designs
+const DateChip = ({ item, acc }) => {
+  const date = item.extended ? item.newDate : item.date;
+  return (
+    <div className="flex items-center gap-2 flex-wrap">
+      <span
+        className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold px-3 py-1 rounded-lg"
+        style={{ background: acc.light, color: acc.text }}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        {formatDate(date)}
+      </span>
+      {item.extended && (
+        <>
+          <span className="text-xs text-gray-400 line-through">
+            {formatDate(item.date)}
+          </span>
+          <span className="text-[10px] bg-orange-50 text-orange-600 border border-orange-200 px-2 py-0.5 rounded-full font-medium">
+            Extended
+          </span>
+        </>
+      )}
+    </div>
+  );
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Design 1 — numbered cards grid (default / original design)
+// ═══════════════════════════════════════════════════════════════════════════
+
 const TimelineCard = ({ item, idx }) => {
   const acc = accents[idx % accents.length];
-  const date = item.extended ? item.newDate : item.date;
-  const isExtended = !!item.extended;
 
   return (
     <motion.div
@@ -99,28 +130,7 @@ const TimelineCard = ({ item, idx }) => {
             </div>
           </div>
 
-          {/* Date */}
-          <div className="flex items-center gap-2 flex-wrap">
-            <span
-              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold px-3 py-1 rounded-lg"
-              style={{ background: acc.light, color: acc.text }}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              {formatDate(date)}
-            </span>
-            {isExtended && (
-              <>
-                <span className="text-xs text-gray-400 line-through">
-                  {formatDate(item.date)}
-                </span>
-                <span className="text-[10px] bg-orange-50 text-orange-600 border border-orange-200 px-2 py-0.5 rounded-full font-medium">
-                  Extended
-                </span>
-              </>
-            )}
-          </div>
+          <DateChip item={item} acc={acc} />
 
           {/* Description */}
           <p className="text-xs sm:text-sm text-slate-500 leading-relaxed flex-1">
@@ -132,8 +142,138 @@ const TimelineCard = ({ item, idx }) => {
   );
 };
 
+const TimelineDesign1 = ({ datesData }) => (
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pt-5">
+    {datesData.map((item, idx) => (
+      <TimelineCard key={idx} item={item} idx={idx} />
+    ))}
+  </div>
+);
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Design 2 — classic vertical timeline: centre line on desktop with cards
+// alternating left/right, left-aligned line on mobile
+// ═══════════════════════════════════════════════════════════════════════════
+
+const TimelineDesign2 = ({ datesData }) => (
+  <div className="relative max-w-3xl mx-auto">
+    {/* Vertical line */}
+    <div className="absolute left-4 sm:left-1/2 top-2 bottom-2 w-0.5 sm:-translate-x-1/2 bg-gradient-to-b from-blue-200 via-blue-400 to-blue-200" />
+
+    {datesData.map((item, idx) => {
+      const acc = accents[idx % accents.length];
+      const left = idx % 2 === 0;
+      return (
+        <motion.div
+          key={idx}
+          className={`relative mb-8 last:mb-0 pl-14 sm:pl-0 sm:flex ${left ? "sm:justify-start" : "sm:justify-end"}`}
+          initial={{ opacity: 0, x: left ? -32 : 32 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.5, delay: idx * 0.08 }}
+        >
+          {/* Node on the line */}
+          <div
+            className="absolute left-4 sm:left-1/2 top-5 -translate-x-1/2 w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md z-10 ring-4 ring-blue-50"
+            style={{ background: `linear-gradient(135deg, ${acc.from}, ${acc.to})` }}
+          >
+            {idx + 1}
+          </div>
+
+          {/* Card */}
+          <div className="sm:w-[calc(50%-2.75rem)] bg-white rounded-2xl border border-blue-50 shadow-md p-5 hover:shadow-lg transition-shadow duration-200">
+            <div className="flex items-start gap-3 mb-3">
+              <div
+                className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center"
+                style={{ background: acc.light, color: acc.text }}
+              >
+                {icons[idx % icons.length]}
+              </div>
+              <h3
+                className="text-sm sm:text-base font-semibold leading-snug pt-1.5"
+                style={{ color: acc.text }}
+              >
+                {item.title}
+              </h3>
+            </div>
+            <DateChip item={item} acc={acc} />
+            <p className="text-xs sm:text-sm text-slate-500 leading-relaxed mt-3">
+              {getDesc(item.title)}
+            </p>
+          </div>
+        </motion.div>
+      );
+    })}
+  </div>
+);
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Design 3 — horizontal stepper: numbered nodes joined by a line on desktop,
+// stacking into simple rows on mobile
+// ═══════════════════════════════════════════════════════════════════════════
+
+const TimelineDesign3 = ({ datesData }) => (
+  <div className="relative max-w-6xl mx-auto">
+    {/* Connecting line (desktop) */}
+    <div className="hidden lg:block absolute top-6 left-[12%] right-[12%] h-0.5 bg-gradient-to-r from-blue-200 via-blue-400 to-blue-200" />
+
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-6">
+      {datesData.map((item, idx) => {
+        const acc = accents[idx % accents.length];
+        return (
+          <motion.div
+            key={idx}
+            className="relative flex lg:flex-col items-start lg:items-center gap-4 lg:gap-0 lg:text-center"
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.5, delay: idx * 0.1 }}
+          >
+            {/* Numbered node */}
+            <div
+              className="relative z-10 flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-white font-bold shadow-md ring-4 ring-blue-50"
+              style={{ background: `linear-gradient(135deg, ${acc.from}, ${acc.to})` }}
+            >
+              {idx + 1}
+            </div>
+
+            <div className="flex-1 lg:mt-5 lg:flex lg:flex-col lg:items-center">
+              <h3
+                className="text-sm sm:text-base font-semibold leading-snug"
+                style={{ color: acc.text }}
+              >
+                {item.title}
+              </h3>
+              <div className="mt-2 lg:flex lg:justify-center">
+                <DateChip item={item} acc={acc} />
+              </div>
+              <p className="text-xs sm:text-sm text-slate-500 leading-relaxed mt-2 lg:px-2">
+                {getDesc(item.title)}
+              </p>
+            </div>
+          </motion.div>
+        );
+      })}
+    </div>
+  </div>
+);
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Top-level component — fetches dates once, renders the design chosen from
+// the admin panel (homecustomisation's "eventDates" component). An explicit
+// `design` prop (used by the /datedesigns preview page) overrides the fetch;
+// missing/unknown values fall back to design 1.
+// ═══════════════════════════════════════════════════════════════════════════
+
+const TIMELINE_DESIGNS = {
+  1: TimelineDesign1,
+  2: TimelineDesign2,
+  3: TimelineDesign3,
+};
+
 const Timeline = forwardRef((props, ref) => {
-  const { confid } = props;
+  const { confid, design } = props;
+  const designNo = useComponentDesign(confid, "eventDates", design);
   const [datesData, setDatesData] = useState([]);
   const [apiUrl, setApiUrl] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -155,6 +295,8 @@ const Timeline = forwardRef((props, ref) => {
       })
       .catch(() => setIsLoading(false));
   }, [apiUrl, confid]);
+
+  const Design = TIMELINE_DESIGNS[designNo] || TimelineDesign1;
 
   return (
     <section ref={ref} className="relative w-full py-14 sm:py-20 overflow-hidden">
@@ -239,14 +381,8 @@ const Timeline = forwardRef((props, ref) => {
           </div>
         )}
 
-        {/* ── Cards grid ── */}
-        {!isLoading && datesData.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pt-5">
-            {datesData.map((item, idx) => (
-              <TimelineCard key={idx} item={item} idx={idx} />
-            ))}
-          </div>
-        )}
+        {/* ── Dates — design picked from the admin panel ── */}
+        {!isLoading && datesData.length > 0 && <Design datesData={datesData} />}
       </div>
     </section>
   );
