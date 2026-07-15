@@ -103,14 +103,14 @@ function AboutDept(props) {
       const regex = new RegExp(word, "gi");
       output = output.replace(
         regex,
-        `<span class="text-blue-300 font-semibold">${word}</span>`
+        `<span class="text-white font-semibold">${word}</span>`
       );
     });
     return output;
   };
 
   return (
-    <section className="relative py-16 w-full bg-gradient-to-br from-[#0a0f1e] via-[#0f172a] to-[#1e3a8a] text-white overflow-hidden">
+    <section className="relative py-16 w-full bg-gradient-to-br from-[#0a0f1e] to-[#0f172a] text-white overflow-hidden">
 
       {/* SIGNAL BACKGROUND */}
       <div className="absolute inset-0 opacity-[0.05]"
@@ -139,7 +139,7 @@ function AboutDept(props) {
           <h2 className="text-2xl md:text-3xl font-bold">
             Department of Electronics and Communication Engineering
           </h2>
-          <p className="text-white/60 mt-3 text-sm">
+          <p className="text-white mt-3 text-sm">
             Pioneering research in communication, AI, and signal processing
           </p>
         </div>
@@ -167,7 +167,7 @@ function AboutDept(props) {
                 </div>
               ) : (
                 <div
-                  className="text-white/80 text-sm leading-relaxed"
+                  className="text-white text-sm leading-relaxed [&_*]:!text-white"
                   dangerouslySetInnerHTML={{
                     __html: highlightKeywords(
                       data?.about[2]?.description || ""
@@ -193,7 +193,7 @@ function AboutDept(props) {
                       key={i}
                       className="flex items-center bg-white/5 border border-white/10 rounded-lg px-3 py-2 hover:bg-white/10 transition"
                     >
-                      <span className="text-blue-300 mr-2">✓</span>
+                      <span className="text-white mr-2">✓</span>
                       <p className="text-sm">{item}</p>
                     </div>
                   ))}

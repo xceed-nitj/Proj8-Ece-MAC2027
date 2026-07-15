@@ -1,7 +1,7 @@
 import { Disclosure, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Link, useLocation } from "react-router-dom";
-import { useState, useEffect, useRef, useLayoutEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import getEnvironment from "../../getenvironment";
 
@@ -35,8 +35,6 @@ const fallbackRight = [
   { name: "Keynote Speakers", href: "/69cc7ea8993a5edc16baf25a" },
   { name: "Contact", href: "/69cc7eaf993a5edc16baf2ca" },
 ];
-
-const fallbackRegister = { name: "Register", href: "/68859b12959ec9c788f10d16" };
 
 // ─── Backend item mapping ─────────────────────────────────────────────────────
 // Backend item shape: { section, label, linkType, templateId, url, isButton,
@@ -75,27 +73,8 @@ function isActive(href, pathname) {
   return pathname === href || pathname === href.trim();
 }
 
-// ─── Desktop nav auto-fit (shrinks font/spacing so items never wrap to a 2nd line) ──
-// Item count is backend-driven, so a fixed breakpoint can't guarantee one line —
-// these steps get applied smallest-necessary-first until content fits the row.
-const FIT_LEVELS = [
-  { fs: 11, gap: 4, px: 10, tracking: 0.08 },
-  { fs: 10.5, gap: 4, px: 9, tracking: 0.06 },
-  { fs: 10, gap: 3, px: 8, tracking: 0.04 },
-  { fs: 9.5, gap: 3, px: 7, tracking: 0.02 },
-  { fs: 9, gap: 2, px: 6, tracking: 0 },
-  { fs: 8.5, gap: 2, px: 5, tracking: 0 },
-  { fs: 8, gap: 1, px: 4, tracking: 0 },
-  { fs: 7.5, gap: 1, px: 3, tracking: 0 },
-];
-
-function applyFitLevel(el, level) {
-  const lvl = FIT_LEVELS[level];
-  el.style.setProperty("--nav-fs", `${lvl.fs}px`);
-  el.style.setProperty("--nav-gap", `${lvl.gap}px`);
-  el.style.setProperty("--nav-px", `${lvl.px}px`);
-  el.style.setProperty("--nav-tracking", `${lvl.tracking}em`);
-}
+// ─── Desktop nav sizing (hardcoded) ───────────────────────────────────────────
+const NAV_FONT = { fs: 12, gap: 3, px: 7, tracking: 0.04 };
 
 // ─── Shared nav background ────────────────────────────────────────────────────
 const NAV_BG = "linear-gradient(90deg, #0a0f1e 0%, #0f172a 30%, #1e3a8a 70%, #1d4ed8 100%)";
@@ -128,14 +107,14 @@ function DesktopNavItem({ item, currentPath }) {
 
   const linkBase = cx(
     "relative inline-flex items-center gap-1 py-1.5 font-semibold uppercase rounded-md transition-all duration-200 group whitespace-nowrap select-none",
-    active ? "text-white" : "text-white/75 hover:text-white"
+    "text-white"
   );
 
   const linkStyle = {
-    fontSize: "var(--nav-fs, 11px)",
-    letterSpacing: "var(--nav-tracking, 0.08em)",
-    paddingLeft: "var(--nav-px, 10px)",
-    paddingRight: "var(--nav-px, 10px)",
+    fontSize: `${NAV_FONT.fs}px`,
+    letterSpacing: `${NAV_FONT.tracking}em`,
+    paddingLeft: `${NAV_FONT.px}px`,
+    paddingRight: `${NAV_FONT.px}px`,
   };
 
   const underline = (
@@ -144,7 +123,7 @@ function DesktopNavItem({ item, currentPath }) {
         "absolute bottom-0 h-[2px] rounded-full transition-transform duration-300 origin-left",
         active ? "scale-x-100 bg-white" : "scale-x-0 group-hover:scale-x-100 bg-white/80"
       )}
-      style={{ left: "var(--nav-px, 10px)", right: "var(--nav-px, 10px)" }}
+      style={{ left: `${NAV_FONT.px}px`, right: `${NAV_FONT.px}px` }}
     />
   );
 
@@ -154,7 +133,7 @@ function DesktopNavItem({ item, currentPath }) {
         href={item.href}
         target="_blank"
         rel="noopener noreferrer"
-        className={cx(linkBase, "text-sky-300 hover:text-sky-200")}
+        className={linkBase}
         style={{ fontFamily: "'Montserrat', sans-serif", ...linkStyle }}
       >
         {name}
@@ -192,21 +171,23 @@ function DesktopNavItem({ item, currentPath }) {
             <div className="py-1.5">
               {item.subItems.map((sub) => {
                 const subClass = cx(
-                  "flex items-center gap-2.5 px-4 py-2.5 text-[11px] font-semibold transition-colors duration-150 group/sub",
+                  "flex items-center gap-2.5 px-4 py-2.5 font-semibold transition-colors duration-150 group/sub",
                   isActive(sub.href, currentPath)
-                    ? "text-blue-700 bg-blue-50"
-                    : "text-slate-700 hover:text-blue-700 hover:bg-blue-50/70"
+                    ? "text-slate-900 bg-slate-100"
+                    : "text-slate-700 hover:text-slate-900"
                 );
+                // Same font size as the top-level nav items.
+                const subStyle = { fontSize: `${NAV_FONT.fs}px` };
                 const dot = (
-                  <span className="w-1 h-1 rounded-full bg-blue-500 opacity-0 group-hover/sub:opacity-100 transition-opacity flex-shrink-0" />
+                  <span className="w-1 h-1 rounded-full bg-slate-400 opacity-0 group-hover/sub:opacity-100 transition-opacity flex-shrink-0" />
                 );
                 return sub.isExternal ? (
-                  <a key={sub.name} href={sub.href} target="_blank" rel="noopener noreferrer" className={subClass}>
+                  <a key={sub.name} href={sub.href} target="_blank" rel="noopener noreferrer" className={subClass} style={subStyle}>
                     {dot}
                     {sub.name}
                   </a>
                 ) : (
-                  <Link key={sub.name} to={sub.href} className={subClass}>
+                  <Link key={sub.name} to={sub.href} className={subClass} style={subStyle}>
                     {dot}
                     {sub.name}
                   </Link>
@@ -244,11 +225,10 @@ export default function Navbar({ confid }) {
   const [loadingNav, setLoadingNav] = useState(true);
   const [navLeft, setNavLeft] = useState(fallbackLeft);
   const [navRight, setNavRight] = useState(fallbackRight);
-  const [registerItem, setRegisterItem] = useState(fallbackRegister);
+  const [registerItem, setRegisterItem] = useState(null);
   const [apiUrl, setApiUrl] = useState(null);
 
   const currentPath = location.pathname;
-  const itemsRef = useRef(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -303,28 +283,6 @@ export default function Navbar({ confid }) {
 
   const allNavItems = [...navLeft, ...navRight];
 
-  // Shrink font-size/spacing step by step until the nav items fit on one line.
-  const fitNavItems = useCallback(() => {
-    const el = itemsRef.current;
-    if (!el) return;
-    let level = 0;
-    applyFitLevel(el, level);
-    while (el.scrollWidth > el.clientWidth && level < FIT_LEVELS.length - 1) {
-      level += 1;
-      applyFitLevel(el, level);
-    }
-  }, []);
-
-  useLayoutEffect(() => {
-    if (loadingNav) return;
-    fitNavItems();
-  }, [loadingNav, navLeft, navRight, fitNavItems]);
-
-  useEffect(() => {
-    window.addEventListener("resize", fitNavItems);
-    return () => window.removeEventListener("resize", fitNavItems);
-  }, [fitNavItems]);
-
   return (
     <div className="sticky top-0 z-50 font-sans">
       <Disclosure as="header">
@@ -377,11 +335,10 @@ export default function Navbar({ confid }) {
                       </div>
                     </Link>
 
-                    {/* Nav items — single line, auto-shrinks to fit (skeleton while loading) */}
+                    {/* Nav items — single line (skeleton while loading) */}
                     <div
-                      ref={itemsRef}
-                      className="flex flex-1 min-w-0 items-center justify-center text-white/45 flex-nowrap"
-                      style={{ gap: "var(--nav-gap, 4px)" }}
+                      className="flex flex-1 min-w-0 items-center justify-center text-white flex-nowrap"
+                      style={{ gap: `${NAV_FONT.gap}px` }}
                     >
                       {loadingNav ? (
                         <NavSkeleton />
@@ -392,17 +349,17 @@ export default function Navbar({ confid }) {
                       )}
                     </div>
 
-                    {/* Register button — white pill */}
+                    {/* Register button — white pill (only when the backend provides one) */}
                     {loadingNav ? (
                       <span className="ml-3 flex-shrink-0 h-8 w-20 rounded-lg bg-white/20 animate-pulse" />
-                    ) : (
+                    ) : registerItem ? (
                       <a
                         href={registerItem.href}
-                        className="ml-3 flex-shrink-0 inline-flex items-center gap-1.5 bg-white hover:bg-blue-50 text-blue-900 text-[11px] font-bold px-4 py-2 rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-black/20 hover:-translate-y-0.5 tracking-wide"
+                        className="ml-3 flex-shrink-0 inline-flex items-center gap-1.5 bg-white text-blue-900 text-[11px] font-bold px-4 py-2 rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-black/20 hover:-translate-y-0.5 tracking-wide"
                       >
                         {registerItem.name}
                       </a>
-                    )}
+                    ) : null}
                   </nav>
 
                   {/* Mobile spacer */}
@@ -456,7 +413,7 @@ export default function Navbar({ confid }) {
                           href={navItem.href}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-semibold text-sky-300 hover:bg-white/10 transition-colors duration-150"
+                          className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-semibold text-white hover:bg-white/10 transition-colors duration-150"
                         >
                           {name}
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -475,7 +432,7 @@ export default function Navbar({ confid }) {
                               "flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors duration-150",
                               navItem.subItems.some((s) => isActive(s.href, currentPath))
                                 ? "text-white bg-white/15"
-                                : "text-white/80 hover:bg-white/10 hover:text-white"
+                                : "text-white hover:bg-white/10"
                             )}
                           >
                             {name}
@@ -491,10 +448,10 @@ export default function Navbar({ confid }) {
                             <div className="mt-1 ml-3 pl-3 border-l-2 border-blue-100 bg-white rounded-lg space-y-0.5 py-2">
                               {navItem.subItems.map((sub) => {
                                 const subClass = cx(
-                                  "block rounded-lg px-3 py-2 text-xs font-medium transition-colors duration-150",
+                                  "block rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-150",
                                   isActive(sub.href, currentPath)
-                                    ? "text-blue-700 bg-blue-50"
-                                    : "text-slate-700 hover:text-blue-700 hover:bg-blue-50/70"
+                                    ? "text-slate-900 bg-slate-100"
+                                    : "text-slate-700 hover:text-slate-900"
                                 );
                                 return sub.isExternal ? (
                                   <a key={sub.name} href={sub.href} target="_blank" rel="noopener noreferrer" className={subClass}>
@@ -521,7 +478,7 @@ export default function Navbar({ confid }) {
                           "block rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors duration-150",
                           isActive(navItem.href, currentPath)
                             ? "text-white bg-white/15"
-                            : "text-white/80 hover:bg-white/10 hover:text-white"
+                            : "text-white hover:bg-white/10"
                         )}
                       >
                         {name}
@@ -529,13 +486,13 @@ export default function Navbar({ confid }) {
                     );
                   })}
 
-                  {/* Mobile register */}
-                  {!loadingNav && (
+                  {/* Mobile register (only when the backend provides one) */}
+                  {!loadingNav && registerItem && (
                     <div className="pt-3 pb-1">
                       <a
                         href={registerItem.href}
                         onClick={close}
-                        className="block w-full text-center bg-white hover:bg-blue-50 text-blue-900 text-sm font-bold px-4 py-3 rounded-xl transition-colors duration-200"
+                        className="block w-full text-center bg-white text-blue-900 text-sm font-bold px-4 py-3 rounded-xl transition-colors duration-200"
                       >
                         {registerItem.name}
                       </a>
