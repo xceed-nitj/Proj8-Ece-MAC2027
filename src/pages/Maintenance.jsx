@@ -167,7 +167,14 @@ export default function Maintenance({ content = {} }) {
           <p className="text-xs text-slate-600">© {name} · All rights reserved.</p>
           <p className="text-xs text-slate-600">
             Developed &amp; maintained by{" "}
-            <span className="text-blue-400">XCEED NITJ</span>
+            <a
+              href="https://xceed.nitj.ac.in"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-400 hover:text-blue-300 hover:underline underline-offset-2 transition-colors duration-200"
+            >
+              XCEED NITJ
+            </a>
           </p>
         </div>
       </div>
