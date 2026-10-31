@@ -1,8 +1,31 @@
+import PropTypes from "prop-types";
 import { motion } from "framer-motion";
+
+// Default text, used for any field the backend leaves empty.
+const MAINTENANCE_DEFAULTS = {
+  name: "MAC",
+  subtitle: "International Conference",
+  badge: "Scheduled Maintenance",
+  title: "We'll be back",
+  highlight: "shortly",
+  message:
+    "We are currently performing scheduled maintenance to bring you an improved experience. Please check back soon. Thank you for your patience.",
+};
 
 // Full-screen "under maintenance" page, styled to match the XCEED footer theme
 // (deep navy background, blue glow line, dot grid, soft glow blobs).
-export default function Maintenance() {
+export default function Maintenance({ content = {} }) {
+  const pick = (key) =>
+    typeof content[key] === "string" && content[key].trim()
+      ? content[key].trim()
+      : MAINTENANCE_DEFAULTS[key];
+  const name = pick("name");
+  const subtitle = pick("subtitle");
+  const badge = pick("badge");
+  const title = pick("title");
+  const highlight = pick("highlight");
+  const message = pick("message");
+
   return (
     <div
       className="relative min-h-screen overflow-hidden flex flex-col"
@@ -69,9 +92,9 @@ export default function Maintenance() {
                   backgroundClip: "text",
                 }}
               >
-                MAC
+                {name}
               </p>
-              <p className="text-[11px] text-slate-500 tracking-wide">International Conference</p>
+              <p className="text-[11px] text-slate-500 tracking-wide">{subtitle}</p>
             </div>
           </div>
 
@@ -108,11 +131,11 @@ export default function Maintenance() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-400" />
             </span>
-            Scheduled Maintenance
+            {badge}
           </span>
 
           <h1 className="font-poppins text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-5">
-            We&apos;ll be back{" "}
+            {title}{" "}
             <span
               style={{
                 background: "linear-gradient(90deg, #93c5fd, #60a5fa, #2563eb)",
@@ -121,13 +144,12 @@ export default function Maintenance() {
                 backgroundClip: "text",
               }}
             >
-              shortly
+              {highlight}
             </span>
           </h1>
 
-          <p className="text-sm sm:text-base text-slate-400 leading-relaxed max-w-lg mx-auto mb-10">
-            We are currently performing scheduled maintenance to bring you an
-            improved experience. Please check back soon. Thank you for your patience.
+          <p className="text-sm sm:text-base text-slate-400 leading-relaxed max-w-lg mx-auto mb-10 whitespace-pre-line">
+            {message}
           </p>
 
           {/* Progress bar */}
@@ -148,7 +170,7 @@ export default function Maintenance() {
           className="pt-6 border-t flex flex-col sm:flex-row items-center justify-between gap-3 text-center"
           style={{ borderColor: "rgba(255,255,255,0.06)" }}
         >
-          <p className="text-xs text-slate-600">© MAC · All rights reserved.</p>
+          <p className="text-xs text-slate-600">© {name} · All rights reserved.</p>
           <p className="text-xs text-slate-600">
             Developed &amp; maintained by{" "}
             <span className="text-blue-400">XCEED NITJ</span>
@@ -158,3 +180,14 @@ export default function Maintenance() {
     </div>
   );
 }
+
+Maintenance.propTypes = {
+  content: PropTypes.shape({
+    name: PropTypes.string,
+    subtitle: PropTypes.string,
+    badge: PropTypes.string,
+    title: PropTypes.string,
+    highlight: PropTypes.string,
+    message: PropTypes.string,
+  }),
+};

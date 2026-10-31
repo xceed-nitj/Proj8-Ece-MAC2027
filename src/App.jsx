@@ -11,15 +11,20 @@ import Speaker4 from "./pages/Speaker4";
 import Speaker5 from "./pages/Speaker5";
 import DateDesigns from "./pages/DateDesigns";
 import Maintenance from "./pages/Maintenance";
-
-// Set to false to take the site out of maintenance mode.
-const MAINTENANCE_MODE = true;
+import useMaintenance from "./useMaintenance";
 
 function App() {
    const confid="69cc7e04993a5edc16baf0a3";
 
-  if (MAINTENANCE_MODE) {
-    return <Maintenance />;
+  const maintenance = useMaintenance(confid);
+
+  // Blank navy screen while the maintenance status loads, so the site
+  // doesn't flash before the maintenance page appears.
+  if (maintenance.loading) {
+    return <div className="min-h-screen" style={{ background: "#0a0f1e" }} />;
+  }
+  if (maintenance.enabled) {
+    return <Maintenance content={maintenance.content} />;
   }
   return (
     <>
