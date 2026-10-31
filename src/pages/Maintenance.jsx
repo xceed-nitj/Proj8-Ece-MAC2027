@@ -69,7 +69,7 @@ export default function Maintenance() {
                   backgroundClip: "text",
                 }}
               >
-                MAC 2027
+                MAC
               </p>
               <p className="text-[11px] text-slate-500 tracking-wide">International Conference</p>
             </div>
@@ -148,7 +148,7 @@ export default function Maintenance() {
           className="pt-6 border-t flex flex-col sm:flex-row items-center justify-between gap-3 text-center"
           style={{ borderColor: "rgba(255,255,255,0.06)" }}
         >
-          <p className="text-xs text-slate-600">© 2026 MAC 2027 · All rights reserved.</p>
+          <p className="text-xs text-slate-600">© 2026 MAC · All rights reserved.</p>
           <p className="text-xs text-slate-600">
             Developed &amp; maintained by{" "}
             <span className="text-blue-400">XCEED NITJ</span>
