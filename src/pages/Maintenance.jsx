@@ -6,8 +6,6 @@ const MAINTENANCE_DEFAULTS = {
   name: "MAC",
   subtitle: "International Conference",
   badge: "Scheduled Maintenance",
-  title: "We'll be back",
-  highlight: "shortly",
   message:
     "We are currently performing scheduled maintenance to bring you an improved experience. Please check back soon. Thank you for your patience.",
 };
@@ -22,8 +20,6 @@ export default function Maintenance({ content = {} }) {
   const name = pick("name");
   const subtitle = pick("subtitle");
   const badge = pick("badge");
-  const title = pick("title");
-  const highlight = pick("highlight");
   const message = pick("message");
 
   return (
@@ -135,7 +131,7 @@ export default function Maintenance({ content = {} }) {
           </span>
 
           <h1 className="font-poppins text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-5">
-            {title}{" "}
+            We&apos;ll be back{" "}
             <span
               style={{
                 background: "linear-gradient(90deg, #93c5fd, #60a5fa, #2563eb)",
@@ -144,7 +140,7 @@ export default function Maintenance({ content = {} }) {
                 backgroundClip: "text",
               }}
             >
-              {highlight}
+              shortly
             </span>
           </h1>
 
@@ -186,8 +182,6 @@ Maintenance.propTypes = {
     name: PropTypes.string,
     subtitle: PropTypes.string,
     badge: PropTypes.string,
-    title: PropTypes.string,
-    highlight: PropTypes.string,
     message: PropTypes.string,
   }),
 };
