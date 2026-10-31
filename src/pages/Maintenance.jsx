@@ -1,11 +1,8 @@
-import { useState } from "react";
 import { motion } from "framer-motion";
 
 // Full-screen "under maintenance" page, styled to match the XCEED footer theme
 // (deep navy background, blue glow line, dot grid, soft glow blobs).
 export default function Maintenance() {
-  const [xceedHovered, setXceedHovered] = useState(false);
-
   return (
     <div
       className="relative min-h-screen overflow-hidden flex flex-col"
@@ -129,33 +126,18 @@ export default function Maintenance() {
           </h1>
 
           <p className="text-sm sm:text-base text-slate-400 leading-relaxed max-w-lg mx-auto mb-10">
-            The MAC 2027 website is currently undergoing maintenance to bring you an
+            We are currently performing scheduled maintenance to bring you an
             improved experience. Please check back soon. Thank you for your patience.
           </p>
 
           {/* Progress bar */}
-          <div className="mx-auto max-w-xs h-1 rounded-full bg-slate-800 overflow-hidden mb-10">
+          <div className="mx-auto max-w-xs h-1 rounded-full bg-slate-800 overflow-hidden">
             <motion.div
               className="h-full w-1/3 rounded-full"
               style={{ background: "linear-gradient(90deg, #2563eb, #60a5fa)" }}
               animate={{ x: ["-100%", "300%"] }}
               transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
             />
-          </div>
-
-          {/* Contact */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <a
-              href="mailto:mac2027@nitj.ac.in"
-              className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-blue-300 transition-colors duration-200"
-            >
-              <span className="w-8 h-8 rounded-lg bg-blue-900/40 border border-blue-800/30 flex items-center justify-center text-blue-400">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              </span>
-              mac2027@nitj.ac.in
-            </a>
           </div>
         </motion.div>
       </main>
@@ -169,22 +151,7 @@ export default function Maintenance() {
           <p className="text-xs text-slate-600">© 2026 MAC 2027 · All rights reserved.</p>
           <p className="text-xs text-slate-600">
             Developed &amp; maintained by{" "}
-            <a
-              href="https://xceed.nitj.ac.in"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="relative inline-block text-blue-400 hover:text-blue-300 transition-colors duration-200"
-              onMouseEnter={() => setXceedHovered(true)}
-              onMouseLeave={() => setXceedHovered(false)}
-            >
-              XCEED NITJ
-              <motion.span
-                className="absolute bottom-0 left-0 h-px bg-blue-400 rounded-full"
-                initial={{ width: 0 }}
-                animate={{ width: xceedHovered ? "100%" : 0 }}
-                transition={{ duration: 0.25 }}
-              />
-            </a>
+            <span className="text-blue-400">XCEED NITJ</span>
           </p>
         </div>
       </div>
