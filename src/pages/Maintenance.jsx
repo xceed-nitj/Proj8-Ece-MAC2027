@@ -1,8 +1,25 @@
+import PropTypes from "prop-types";
 import { motion } from "framer-motion";
+
+// Default text, used for any field the backend leaves empty.
+const MAINTENANCE_DEFAULTS = {
+  name: "MAC",
+  subtitle: "International Conference",
+  message:
+    "We are currently performing scheduled maintenance to bring you an improved experience. Please check back soon. Thank you for your patience.",
+};
 
 // Full-screen "under maintenance" page, styled to match the XCEED footer theme
 // (deep navy background, blue glow line, dot grid, soft glow blobs).
-export default function Maintenance() {
+export default function Maintenance({ content = {} }) {
+  const pick = (key) =>
+    typeof content[key] === "string" && content[key].trim()
+      ? content[key].trim()
+      : MAINTENANCE_DEFAULTS[key];
+  const name = pick("name");
+  const subtitle = pick("subtitle");
+  const message = pick("message");
+
   return (
     <div
       className="relative min-h-screen overflow-hidden flex flex-col"
@@ -69,9 +86,9 @@ export default function Maintenance() {
                   backgroundClip: "text",
                 }}
               >
-                MAC
+                {name}
               </p>
-              <p className="text-[11px] text-slate-500 tracking-wide">International Conference</p>
+              <p className="text-[11px] text-slate-500 tracking-wide">{subtitle}</p>
             </div>
           </div>
 
@@ -125,9 +142,8 @@ export default function Maintenance() {
             </span>
           </h1>
 
-          <p className="text-sm sm:text-base text-slate-400 leading-relaxed max-w-lg mx-auto mb-10">
-            We are currently performing scheduled maintenance to bring you an
-            improved experience. Please check back soon. Thank you for your patience.
+          <p className="text-sm sm:text-base text-slate-400 leading-relaxed max-w-lg mx-auto mb-10 whitespace-pre-line">
+            {message}
           </p>
 
           {/* Progress bar */}
@@ -148,13 +164,28 @@ export default function Maintenance() {
           className="pt-6 border-t flex flex-col sm:flex-row items-center justify-between gap-3 text-center"
           style={{ borderColor: "rgba(255,255,255,0.06)" }}
         >
-          <p className="text-xs text-slate-600">© MAC · All rights reserved.</p>
+          <p className="text-xs text-slate-600">© {name} · All rights reserved.</p>
           <p className="text-xs text-slate-600">
             Developed &amp; maintained by{" "}
-            <span className="text-blue-400">XCEED NITJ</span>
+            <a
+              href="https://xceed.nitj.ac.in"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-400 hover:text-blue-300 hover:underline underline-offset-2 transition-colors duration-200"
+            >
+              XCEED NITJ
+            </a>
           </p>
         </div>
       </div>
     </div>
   );
 }
+
+Maintenance.propTypes = {
+  content: PropTypes.shape({
+    name: PropTypes.string,
+    subtitle: PropTypes.string,
+    message: PropTypes.string,
+  }),
+};
