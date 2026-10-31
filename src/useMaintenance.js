@@ -9,7 +9,7 @@ const FALLBACK_ENABLED = true;
 // Fetches maintenance status for a conference from the backend:
 //   GET {apiUrl}/conferencemodule/maintenance/public/{confid}
 // Expected response:
-//   { enabled, name, subtitle, badge, message }
+//   { enabled, name, subtitle, message }
 export default function useMaintenance(confid) {
   const [state, setState] = useState({ loading: true, enabled: false, content: {} });
 

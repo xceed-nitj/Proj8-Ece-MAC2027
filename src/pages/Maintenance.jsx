@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 const MAINTENANCE_DEFAULTS = {
   name: "MAC",
   subtitle: "International Conference",
-  badge: "Scheduled Maintenance",
   message:
     "We are currently performing scheduled maintenance to bring you an improved experience. Please check back soon. Thank you for your patience.",
 };
@@ -19,7 +18,6 @@ export default function Maintenance({ content = {} }) {
       : MAINTENANCE_DEFAULTS[key];
   const name = pick("name");
   const subtitle = pick("subtitle");
-  const badge = pick("badge");
   const message = pick("message");
 
   return (
@@ -127,7 +125,7 @@ export default function Maintenance({ content = {} }) {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-400" />
             </span>
-            {badge}
+            Scheduled Maintenance
           </span>
 
           <h1 className="font-poppins text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-5">
@@ -181,7 +179,6 @@ Maintenance.propTypes = {
   content: PropTypes.shape({
     name: PropTypes.string,
     subtitle: PropTypes.string,
-    badge: PropTypes.string,
     message: PropTypes.string,
   }),
 };
