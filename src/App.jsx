@@ -10,9 +10,17 @@ import Speaker3 from "./pages/Speaker3";
 import Speaker4 from "./pages/Speaker4";
 import Speaker5 from "./pages/Speaker5";
 import DateDesigns from "./pages/DateDesigns";
+import Maintenance from "./pages/Maintenance";
+
+// Set to false to take the site out of maintenance mode.
+const MAINTENANCE_MODE = true;
 
 function App() {
    const confid="69cc7e04993a5edc16baf0a3";
+
+  if (MAINTENANCE_MODE) {
+    return <Maintenance />;
+  }
   return (
     <>
 
